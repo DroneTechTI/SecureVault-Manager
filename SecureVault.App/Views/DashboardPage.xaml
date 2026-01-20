@@ -49,10 +49,12 @@
                                 <TextBlock Text="Password Deboli" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
-                            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4" Margin="0,16,0,0">
-                                <TextBlock x:Name="CompromisedPasswordsText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#F44336"/>
-                                <TextBlock Text="Compromesse" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                            </StackPanel>
+                            <Button Grid.Row="1" Grid.Column="1" Margin="0,16,0,0" Click="OnViewCompromisedClick" Background="Transparent" BorderThickness="0" Padding="0" HorizontalAlignment="Left">
+                                <StackPanel Spacing="4">
+                                    <TextBlock x:Name="CompromisedPasswordsText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#F44336"/>
+                                    <TextBlock Text="🔍 Compromesse (clicca per dettagli)" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                </StackPanel>
+                            </Button>
                         </Grid>
                     </StackPanel>
                 </Grid>
