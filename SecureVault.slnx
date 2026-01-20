@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="SecureVault.App/SecureVault.App.csproj" />
+  <Project Path="SecureVault.Core/SecureVault.Core.csproj" />
+  <Project Path="SecureVault.Tests/SecureVault.Tests.csproj" />
+</Solution>
