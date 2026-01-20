@@ -6,8 +6,8 @@
     <ScrollViewer>
         <StackPanel Padding="24" Spacing="24" MaxWidth="800">
             <StackPanel Spacing="8">
-                <TextBlock Text="Import Passwords" FontSize="32" FontWeight="Bold"/>
-                <TextBlock Text="Import your existing passwords from Chrome or Samsung Pass" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="Importa Password" FontSize="32" FontWeight="Bold"/>
+                <TextBlock Text="Importa le tue password esistenti da Chrome o Samsung Pass" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             </StackPanel>
 
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
@@ -16,8 +16,8 @@
                         <FontIcon Glyph="&#xE774;" FontSize="32" Foreground="#4285F4"/>
                         <TextBlock Text="Google Chrome" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <TextBlock TextWrapping="Wrap" Text="To export from Chrome: Open Chrome → Settings → Passwords → Export passwords → Save CSV file"/>
-                    <Button Content="Select Chrome CSV File" Click="OnImportChromeClick" Style="{StaticResource AccentButtonStyle}"/>
+                    <TextBlock TextWrapping="Wrap" Text="Per esportare da Chrome: Apri Chrome → Impostazioni → Password → Esporta password → Salva file CSV"/>
+                    <Button Content="Seleziona File CSV Chrome" Click="OnImportChromeClick" Style="{StaticResource AccentButtonStyle}"/>
                 </StackPanel>
             </Border>
 
@@ -27,14 +27,14 @@
                         <FontIcon Glyph="&#xE8EA;" FontSize="32" Foreground="#1428A0"/>
                         <TextBlock Text="Samsung Pass" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
-                    <TextBlock TextWrapping="Wrap" Text="To export from Samsung Pass: Open Samsung Pass app → Settings → Export data → Save file"/>
-                    <Button Content="Select Samsung Pass File" Click="OnImportSamsungClick" Style="{StaticResource AccentButtonStyle}"/>
+                    <TextBlock TextWrapping="Wrap" Text="Per esportare da Samsung Pass: Apri app Samsung Pass → Impostazioni → Esporta dati → Salva file"/>
+                    <Button Content="Seleziona File Samsung Pass" Click="OnImportSamsungClick" Style="{StaticResource AccentButtonStyle}"/>
                 </StackPanel>
             </Border>
 
             <Border x:Name="ResultsPanel" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="12">
-                    <TextBlock Text="Import Results" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Risultati Importazione" FontSize="20" FontWeight="SemiBold"/>
                     <TextBlock x:Name="ResultsText" TextWrapping="Wrap"/>
                 </StackPanel>
             </Border>
