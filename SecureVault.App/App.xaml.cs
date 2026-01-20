@@ -1,4 +1,7 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.UI.Xaml.Navigation;
+using SecureVault.App.Services;
+using SecureVault.App.Views;
 
 namespace SecureVault.App
 {
@@ -7,7 +10,8 @@ namespace SecureVault.App
     /// </summary>
     public partial class App : Application
     {
-        private Window window = Window.Current;
+        public static Window? MainWindow { get; private set; }
+        public static IServiceProvider Services { get; private set; } = null!;
 
         /// <summary>
         /// Initializes the singleton application object.  This is the first line of authored code
@@ -16,6 +20,11 @@ namespace SecureVault.App
         public App()
         {
             this.InitializeComponent();
+            
+            // Configure dependency injection
+            var services = new ServiceCollection();
+            services.AddSecureVaultServices();
+            Services = services.BuildServiceProvider();
         }
 
         /// <summary>
@@ -25,17 +34,19 @@ namespace SecureVault.App
         /// <param name="e">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
-            window ??= new Window();
-
-            if (window.Content is not Frame rootFrame)
+            MainWindow = new Window
             {
-                rootFrame = new Frame();
-                rootFrame.NavigationFailed += OnNavigationFailed;
-                window.Content = rootFrame;
-            }
+                Title = "SecureVault Manager"
+            };
 
-            _ = rootFrame.Navigate(typeof(MainPage), e.Arguments);
-            window.Activate();
+            var rootFrame = new Frame();
+            rootFrame.NavigationFailed += OnNavigationFailed;
+            MainWindow.Content = rootFrame;
+
+            // Navigate to authentication page
+            rootFrame.Navigate(typeof(AuthenticationPage));
+            
+            MainWindow.Activate();
         }
 
         /// <summary>
