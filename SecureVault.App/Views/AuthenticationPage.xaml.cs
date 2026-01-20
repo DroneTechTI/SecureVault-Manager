@@ -32,7 +32,6 @@ public sealed partial class AuthenticationPage : Page
             UnlockPanel.Visibility = Visibility.Collapsed;
             CreatePanel.Visibility = Visibility.Visible;
             ConfirmPasswordBox.Visibility = Visibility.Visible;
-            PasswordStrengthPanel.Visibility = Visibility.Visible;
         }
     }
 
@@ -42,9 +41,22 @@ public sealed partial class AuthenticationPage : Page
         {
             if (UnlockPanel.Visibility == Visibility.Visible)
             {
-                ViewModel.UnlockVaultCommand.Execute(null);
+                OnUnlockClick(null, null);
             }
         }
+    }
+
+    private async void OnUnlockClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.MasterPassword = MasterPasswordBox.Password;
+        await ViewModel.UnlockVaultCommand.ExecuteAsync(null);
+    }
+
+    private async void OnCreateClick(object sender, RoutedEventArgs e)
+    {
+        ViewModel.MasterPassword = MasterPasswordBox.Password;
+        ViewModel.ConfirmPassword = ConfirmPasswordBox.Password;
+        await ViewModel.CreateVaultCommand.ExecuteAsync(null);
     }
 
     private void OnCreateVaultClick(object sender, RoutedEventArgs e)
@@ -53,7 +65,6 @@ public sealed partial class AuthenticationPage : Page
         UnlockPanel.Visibility = Visibility.Collapsed;
         CreatePanel.Visibility = Visibility.Visible;
         ConfirmPasswordBox.Visibility = Visibility.Visible;
-        PasswordStrengthPanel.Visibility = Visibility.Visible;
     }
 
     private void OnBackToUnlockClick(object sender, RoutedEventArgs e)
@@ -62,7 +73,6 @@ public sealed partial class AuthenticationPage : Page
         UnlockPanel.Visibility = Visibility.Visible;
         CreatePanel.Visibility = Visibility.Collapsed;
         ConfirmPasswordBox.Visibility = Visibility.Collapsed;
-        PasswordStrengthPanel.Visibility = Visibility.Collapsed;
     }
 
     private void NavigateToMainPage()

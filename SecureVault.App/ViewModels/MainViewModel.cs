@@ -61,7 +61,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     [RelayCommand]
-    private async Task RefreshDataAsync()
+    public async Task RefreshDataAsync()
     {
         if (!IsVaultUnlocked)
             return;

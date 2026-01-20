@@ -33,6 +33,7 @@ public sealed partial class GeneratorPage : Page
         {
             var password = _generatorService.GeneratePassword(options);
             GeneratedPasswordText.Text = password;
+            LengthValueText.Text = ((int)LengthSlider.Value).ToString();
         }
         catch (Exception ex)
         {

@@ -1,31 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="SecureVault.App.Views.GeneratorPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ScrollViewer>
         <StackPanel Padding="24" Spacing="24" MaxWidth="800">
-            <!-- Header -->
             <TextBlock Text="Password Generator" FontSize="32" FontWeight="Bold"/>
 
-            <!-- Generated Password Display -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="8"
-                    Padding="24"
-                    BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="16">
-                    <TextBlock x:Name="GeneratedPasswordText" 
-                               Text="Click Generate to create a password"
-                               FontSize="24"
-                               FontFamily="Consolas"
-                               TextWrapping="Wrap"
-                               HorizontalAlignment="Center"/>
-                    
+                    <TextBlock x:Name="GeneratedPasswordText" Text="Click Generate to create a password" FontSize="24" FontFamily="Consolas" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
                         <Button Content="Generate" Click="OnGenerateClick" Style="{StaticResource AccentButtonStyle}"/>
                         <Button Content="Copy" Click="OnCopyClick"/>
@@ -33,32 +17,19 @@
                 </StackPanel>
             </Border>
 
-            <!-- Options -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="8"
-                    Padding="24"
-                    BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="16">
                     <TextBlock Text="Options" FontSize="20" FontWeight="SemiBold"/>
-
                     <StackPanel Spacing="8">
                         <TextBlock Text="Password Length"/>
-                        <Slider x:Name="LengthSlider" 
-                                Minimum="8" 
-                                Maximum="64" 
-                                Value="16"
-                                StepFrequency="1"/>
-                        <TextBlock x:Name="LengthValueText" Text="16" 
-                                   FontSize="12"
-                                   Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <Slider x:Name="LengthSlider" Minimum="8" Maximum="64" Value="16" StepFrequency="1"/>
+                        <TextBlock x:Name="LengthValueText" Text="16" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
-
                     <ToggleSwitch x:Name="UppercaseToggle" Header="Include Uppercase (A-Z)" IsOn="True"/>
                     <ToggleSwitch x:Name="LowercaseToggle" Header="Include Lowercase (a-z)" IsOn="True"/>
                     <ToggleSwitch x:Name="DigitsToggle" Header="Include Numbers (0-9)" IsOn="True"/>
-                    <ToggleSwitch x:Name="SpecialToggle" Header="Include Special Characters (!@#$)" IsOn="True"/>
-                    <ToggleSwitch x:Name="AvoidAmbiguousToggle" Header="Avoid Ambiguous Characters (0,O,l,I)" IsOn="True"/>
+                    <ToggleSwitch x:Name="SpecialToggle" Header="Include Special Characters" IsOn="True"/>
+                    <ToggleSwitch x:Name="AvoidAmbiguousToggle" Header="Avoid Ambiguous Characters" IsOn="True"/>
                 </StackPanel>
             </Border>
         </StackPanel>
