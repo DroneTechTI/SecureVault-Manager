@@ -1,0 +1,72 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Input;
+using SecureVault.App.ViewModels;
+
+namespace SecureVault.App.Views;
+
+public sealed partial class AuthenticationPage : Page
+{
+    public AuthenticationViewModel ViewModel { get; }
+
+    public AuthenticationPage()
+    {
+        this.InitializeComponent();
+        
+        ViewModel = App.Services.GetRequiredService<AuthenticationViewModel>();
+        ViewModel.OnVaultUnlocked += NavigateToMainPage;
+        ViewModel.OnVaultCreated += NavigateToMainPage;
+
+        // Check if vault exists
+        if (ViewModel.VaultExists)
+        {
+            TitleText.Text = "Unlock Vault";
+            UnlockPanel.Visibility = Visibility.Visible;
+            CreatePanel.Visibility = Visibility.Collapsed;
+            ConfirmPasswordBox.Visibility = Visibility.Collapsed;
+        }
+        else
+        {
+            TitleText.Text = "Create Master Password";
+            UnlockPanel.Visibility = Visibility.Collapsed;
+            CreatePanel.Visibility = Visibility.Visible;
+            ConfirmPasswordBox.Visibility = Visibility.Visible;
+            PasswordStrengthPanel.Visibility = Visibility.Visible;
+        }
+    }
+
+    private void OnPasswordKeyDown(object sender, KeyRoutedEventArgs e)
+    {
+        if (e.Key == Windows.System.VirtualKey.Enter)
+        {
+            if (UnlockPanel.Visibility == Visibility.Visible)
+            {
+                ViewModel.UnlockVaultCommand.Execute(null);
+            }
+        }
+    }
+
+    private void OnCreateVaultClick(object sender, RoutedEventArgs e)
+    {
+        TitleText.Text = "Create Master Password";
+        UnlockPanel.Visibility = Visibility.Collapsed;
+        CreatePanel.Visibility = Visibility.Visible;
+        ConfirmPasswordBox.Visibility = Visibility.Visible;
+        PasswordStrengthPanel.Visibility = Visibility.Visible;
+    }
+
+    private void OnBackToUnlockClick(object sender, RoutedEventArgs e)
+    {
+        TitleText.Text = "Unlock Vault";
+        UnlockPanel.Visibility = Visibility.Visible;
+        CreatePanel.Visibility = Visibility.Collapsed;
+        ConfirmPasswordBox.Visibility = Visibility.Collapsed;
+        PasswordStrengthPanel.Visibility = Visibility.Collapsed;
+    }
+
+    private void NavigateToMainPage()
+    {
+        Frame.Navigate(typeof(MainPage));
+    }
+}

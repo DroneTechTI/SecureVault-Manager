@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="SecureVault.App.Views.DashboardPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <ScrollViewer>
+        <StackPanel Padding="24" Spacing="24">
+            <!-- Header -->
+            <TextBlock Text="Security Dashboard" 
+                       FontSize="32" 
+                       FontWeight="Bold"/>
+
+            <!-- Security Score Card -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
+                    CornerRadius="8"
+                    Padding="24"
+                    BorderThickness="1"
+                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Score Circle -->
+                    <Grid Grid.Column="0" Margin="0,0,32,0">
+                        <Ellipse Width="120" Height="120" Fill="{ThemeResource AccentFillColorDefaultBrush}" Opacity="0.1"/>
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <TextBlock Text="{x:Bind ViewModel.SecurityScore.OverallScore, Mode=OneWay}" 
+                                       FontSize="48" 
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Text="{x:Bind ViewModel.ScoreLevel, Mode=OneWay}" 
+                                       FontSize="14" 
+                                       HorizontalAlignment="Center"
+                                       Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- Stats -->
+                    <StackPanel Grid.Column="1" Spacing="16" VerticalAlignment="Center">
+                        <TextBlock Text="Password Health Overview" 
+                                   FontSize="20" 
+                                   FontWeight="SemiBold"/>
+                        
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+
+                            <!-- Total Credentials -->
+                            <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
+                                <TextBlock Text="{x:Bind ViewModel.TotalCredentials, Mode=OneWay}" 
+                                           FontSize="24" 
+                                           FontWeight="Bold"/>
+                                <TextBlock Text="Total Credentials" 
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+
+                            <!-- Strong Passwords -->
+                            <StackPanel Grid.Row="0" Grid.Column="1" Spacing="4">
+                                <TextBlock Text="{x:Bind ViewModel.StrongPasswords, Mode=OneWay}" 
+                                           FontSize="24" 
+                                           FontWeight="Bold"
+                                           Foreground="#4CAF50"/>
+                                <TextBlock Text="Strong Passwords" 
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+
+                            <!-- Weak Passwords -->
+                            <StackPanel Grid.Row="1" Grid.Column="0" Spacing="4" Margin="0,16,0,0">
+                                <TextBlock Text="{x:Bind ViewModel.WeakPasswords, Mode=OneWay}" 
+                                           FontSize="24" 
+                                           FontWeight="Bold"
+                                           Foreground="#FFC107"/>
+                                <TextBlock Text="Weak Passwords" 
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+
+                            <!-- Compromised -->
+                            <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4" Margin="0,16,0,0">
+                                <TextBlock Text="{x:Bind ViewModel.CompromisedPasswords, Mode=OneWay}" 
+                                           FontSize="24" 
+                                           FontWeight="Bold"
+                                           Foreground="#F44336"/>
+                                <TextBlock Text="Compromised" 
+                                           FontSize="12"
+                                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <!-- Quick Actions -->
+            <TextBlock Text="Quick Actions" FontSize="20" FontWeight="SemiBold"/>
+            
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column="0" HorizontalAlignment="Stretch" Margin="0,0,8,0" Padding="16">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE8B7;" FontSize="32"/>
+                        <TextBlock Text="Import Passwords" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="1" HorizontalAlignment="Stretch" Margin="8,0" Padding="16">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE72E;" FontSize="32"/>
+                        <TextBlock Text="Generate Password" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="2" HorizontalAlignment="Stretch" Margin="8,0,0,0" Padding="16">
+                    <StackPanel Spacing="8">
+                        <FontIcon Glyph="&#xE74E;" FontSize="32"/>
+                        <TextBlock Text="View All Credentials" TextWrapping="Wrap" TextAlignment="Center"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+
+            <!-- Loading Indicator -->
+            <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
+                          Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+                          Width="50" 
+                          Height="50"
+                          HorizontalAlignment="Center"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
