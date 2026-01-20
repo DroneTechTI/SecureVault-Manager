@@ -53,7 +53,7 @@ public partial class AuthenticationViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(MasterPassword))
         {
-            ShowError("Please enter your master password");
+            ShowError("⚠️ Inserisci la tua password principale");
             return;
         }
 
@@ -71,7 +71,7 @@ public partial class AuthenticationViewModel : ObservableObject
             }
             else
             {
-                ShowError("Incorrect master password. Please try again.");
+                ShowError("❌ Password errata! Riprova.");
             }
         }
         catch (Exception ex)
@@ -90,19 +90,19 @@ public partial class AuthenticationViewModel : ObservableObject
     {
         if (string.IsNullOrWhiteSpace(MasterPassword))
         {
-            ShowError("Please enter a master password");
+            ShowError("⚠️ Inserisci una password principale");
             return;
         }
 
         if (MasterPassword.Length < 8)
         {
-            ShowError("Master password must be at least 8 characters long");
+            ShowError("⚠️ La password deve essere almeno di 8 caratteri");
             return;
         }
 
         if (MasterPassword != ConfirmPassword)
         {
-            ShowError("Passwords do not match");
+            ShowError("❌ Le password non corrispondono");
             return;
         }
 

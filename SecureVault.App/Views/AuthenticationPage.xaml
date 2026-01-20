@@ -22,7 +22,7 @@
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="32" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="16">
                         <TextBlock x:Name="TitleText" Text="Sblocca Vault" FontSize="24" FontWeight="SemiBold"/>
-                        <InfoBar x:Name="ErrorBar" Severity="Error" IsOpen="False" IsClosable="True"/>
+                        <InfoBar x:Name="ErrorBar" Severity="Error" IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}" Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}" IsClosable="True"/>
                         <PasswordBox x:Name="MasterPasswordBox" Header="Password Principale" PlaceholderText="Inserisci la tua password principale" KeyDown="OnPasswordKeyDown"/>
                         <PasswordBox x:Name="ConfirmPasswordBox" Header="Conferma Password" PlaceholderText="Conferma la tua password principale" Visibility="Collapsed"/>
 
