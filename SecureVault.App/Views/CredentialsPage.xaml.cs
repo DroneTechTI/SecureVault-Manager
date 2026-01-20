@@ -4,6 +4,7 @@ using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using SecureVault.App.ViewModels;
+using SecureVault.Core.Interfaces;
 
 namespace SecureVault.App.Views;
 

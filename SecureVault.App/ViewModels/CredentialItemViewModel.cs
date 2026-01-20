@@ -40,6 +40,27 @@ public partial class CredentialItemViewModel : ObservableObject
 
     [ObservableProperty]
     private string _statusColor = "#4CAF50";
+    
+    public Windows.UI.Color StatusColorValue
+    {
+        get
+        {
+            try
+            {
+                var hex = StatusColor.TrimStart('#');
+                return Windows.UI.Color.FromArgb(
+                    255,
+                    Convert.ToByte(hex.Substring(0, 2), 16),
+                    Convert.ToByte(hex.Substring(2, 2), 16),
+                    Convert.ToByte(hex.Substring(4, 2), 16)
+                );
+            }
+            catch
+            {
+                return Windows.UI.Color.FromArgb(255, 76, 175, 80); // Default green
+            }
+        }
+    }
 
     [ObservableProperty]
     private string _statusText = "Strong";
