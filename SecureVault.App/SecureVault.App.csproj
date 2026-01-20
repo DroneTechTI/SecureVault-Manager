@@ -9,7 +9,7 @@
         <UseWinUI>true</UseWinUI>
         <EnableMsixTooling>false</EnableMsixTooling>
         <WindowsPackageType>None</WindowsPackageType>
-        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+        <WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>
 
         <!-- Project Options -->
         <Nullable>enable</Nullable>

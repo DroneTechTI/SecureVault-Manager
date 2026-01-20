@@ -38,7 +38,7 @@
 
             <StackPanel Spacing="16">
                 <TextBlock Text="Informazioni" FontSize="20" FontWeight="SemiBold"/>
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrash="{ThemeResource CardStrokeColorDefaultBrush}">
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="8">
                         <TextBlock Text="SecureVault Manager" FontWeight="SemiBold"/>
                         <TextBlock Text="Versione 1.0.0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
