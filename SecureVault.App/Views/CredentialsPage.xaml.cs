@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml.Input;
 using Microsoft.UI.Xaml.Navigation;
 using SecureVault.App.ViewModels;
 using SecureVault.Core.Interfaces;
+using System.Linq;
 
 namespace SecureVault.App.Views;
 
@@ -25,35 +26,67 @@ public sealed partial class CredentialsPage : Page
         base.OnNavigatedTo(e);
         
         LoadingRing.IsActive = true;
-        
-        // Show quick count first
-        var quickCount = await _vaultService.GetAllCredentialsAsync();
         CredentialsList.ItemsSource = null;
         
-        if (quickCount.Count > 500)
+        try
         {
-            // For large datasets, show a message
-            var warningText = new TextBlock
-            {
-                Text = $"⏳ Caricamento di {quickCount.Count} credenziali...\n\nL'analisi di sicurezza potrebbe richiedere qualche minuto.\n\nPuoi usare la ricerca per trovare subito una credenziale specifica.",
-                TextAlignment = TextAlignment.Center,
-                Margin = new Thickness(20),
-                FontSize = 16
-            };
-            // Note: We'll load in background
-        }
-        
-        // Load in background to not freeze UI
-        _ = Task.Run(async () =>
-        {
-            await ViewModel.LoadCredentialsCommand.ExecuteAsync(null);
+            // Get quick count
+            var quickCount = await _vaultService.GetAllCredentialsAsync();
             
-            DispatcherQueue.TryEnqueue(() =>
+            if (quickCount.Count > 500)
             {
-                CredentialsList.ItemsSource = ViewModel.Credentials;
-                LoadingRing.IsActive = false;
+                // Show warning for large datasets
+                System.Diagnostics.Debug.WriteLine($"Loading {quickCount.Count} credentials - this may take time");
+            }
+            
+            // Load WITHOUT full analysis first (faster)
+            await Task.Run(async () =>
+            {
+                // Load credentials WITHOUT analysis initially
+                var credentials = await _vaultService.GetAllCredentialsAsync();
+                
+                DispatcherQueue.TryEnqueue(() =>
+                {
+                    // Show credentials immediately without analysis
+                    ViewModel.Credentials.Clear();
+                    foreach (var cred in credentials.Take(100)) // Show first 100 immediately
+                    {
+                        var vm = new CredentialItemViewModel(cred, null, _vaultService, 
+                            App.Services.GetRequiredService<IPasswordGeneratorService>());
+                        ViewModel.Credentials.Add(vm);
+                    }
+                    
+                    CredentialsList.ItemsSource = ViewModel.Credentials;
+                    LoadingRing.IsActive = false;
+                    
+                    // Load rest in background
+                    if (credentials.Count > 100)
+                    {
+                        _ = Task.Run(() =>
+                        {
+                            for (int i = 100; i < credentials.Count; i++)
+                            {
+                                var cred = credentials[i];
+                                DispatcherQueue.TryEnqueue(() =>
+                                {
+                                    var vm = new CredentialItemViewModel(cred, null, _vaultService,
+                                        App.Services.GetRequiredService<IPasswordGeneratorService>());
+                                    ViewModel.Credentials.Add(vm);
+                                });
+                                
+                                if (i % 50 == 0)
+                                    Task.Delay(10).Wait(); // Small delay to keep UI responsive
+                            }
+                        });
+                    }
+                });
             });
-        });
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error loading credentials: {ex.Message}");
+            LoadingRing.IsActive = false;
+        }
     }
 
     private async void OnSearchKeyPressed(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -83,5 +116,74 @@ public sealed partial class CredentialsPage : Page
     {
         ViewModel.FilterMode = "Compromised";
         ViewModel.ApplyFilterCommand.Execute(null);
+    }
+
+    private async void OnGeneratePasswordClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        if (vm != null)
+        {
+            await vm.GenerateNewPasswordCommand.ExecuteAsync(null);
+            
+            var dialog = new ContentDialog
+            {
+                Title = "Password Generata",
+                Content = $"Nuova password generata per {vm.Title}!\n\nLa password è stata salvata. Ricordati di cambiarla anche sul sito!",
+                CloseButtonText = "OK",
+                XamlRoot = this.XamlRoot
+            };
+            await dialog.ShowAsync();
+        }
+    }
+
+    private void OnCopyUsernameClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        vm?.CopyUsernameCommand.Execute(null);
+    }
+
+    private void OnCopyPasswordClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        vm?.CopyPasswordCommand.Execute(null);
+    }
+
+    private async void OnOpenUrlClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        if (vm != null)
+        {
+            await vm.OpenUrlCommand.ExecuteAsync(null);
+        }
+    }
+
+    private async void OnDeleteCredentialClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        if (vm == null) return;
+
+        var dialog = new ContentDialog
+        {
+            Title = "Conferma Eliminazione",
+            Content = $"Sei sicuro di voler eliminare questa credenziale?\n\n{vm.Title}\n{vm.Username}\n\n⚠️ Questa operazione NON può essere annullata!",
+            PrimaryButtonText = "Elimina",
+            CloseButtonText = "Annulla",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = this.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            await ViewModel.DeleteCredentialCommand.ExecuteAsync(vm);
+            
+            // Refresh list
+            ViewModel.Credentials.Remove(vm);
+        }
     }
 }
