@@ -4,6 +4,8 @@ using SecureVault.Core.Interfaces;
 using SecureVault.Core.Models;
 using Windows.ApplicationModel.DataTransfer;
 using Windows.System;
+using SecureVault.App.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace SecureVault.App.ViewModels;
 
@@ -16,6 +18,7 @@ public partial class CredentialItemViewModel : ObservableObject
     private readonly IPasswordGeneratorService _generatorService;
     private readonly Credential _credential;
     private readonly PasswordAnalysisResult? _analysis;
+    private readonly LocalizationService _localization;
 
     public string Id => _credential.Id;
     public string Title => _credential.Title;
@@ -78,6 +81,7 @@ public partial class CredentialItemViewModel : ObservableObject
         _analysis = analysis;
         _vaultService = vaultService;
         _generatorService = generatorService;
+        _localization = App.Services.GetRequiredService<LocalizationService>();
 
         if (analysis != null)
         {
@@ -149,22 +153,22 @@ public partial class CredentialItemViewModel : ObservableObject
         if (IsCompromised)
         {
             StatusColor = "#F44336";
-            StatusText = "Compromised";
+            StatusText = _localization.Get("Compromised");
         }
         else if (IsDuplicate)
         {
             StatusColor = "#FF9800";
-            StatusText = "Duplicate";
+            StatusText = _localization.Get("Duplicate");
         }
         else if (IsWeak)
         {
             StatusColor = "#FFC107";
-            StatusText = "Weak";
+            StatusText = _localization.Get("Weak");
         }
         else
         {
             StatusColor = "#4CAF50";
-            StatusText = "Strong";
+            StatusText = _localization.Get("Strong");
         }
     }
 }

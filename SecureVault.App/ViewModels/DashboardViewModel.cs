@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SecureVault.Core.Interfaces;
 using SecureVault.Core.Models;
+using Microsoft.UI.Dispatching;
 
 namespace SecureVault.App.ViewModels;
 
@@ -12,6 +13,7 @@ public partial class DashboardViewModel : ObservableObject
 {
     public readonly IVaultService _vaultService;
     private readonly IPasswordAnalysisService _analysisService;
+    private DispatcherQueue? _dispatcherQueue;
 
     [ObservableProperty]
     private SecurityScore? _securityScore;
@@ -44,6 +46,11 @@ public partial class DashboardViewModel : ObservableObject
     {
         _vaultService = vaultService;
         _analysisService = analysisService;
+    }
+    
+    public void SetDispatcherQueue(DispatcherQueue dispatcherQueue)
+    {
+        _dispatcherQueue = dispatcherQueue;
     }
 
     [RelayCommand]
@@ -93,13 +100,31 @@ public partial class DashboardViewModel : ObservableObject
                     {
                         var fullScore = await _analysisService.CalculateSecurityScoreAsync(credentials);
                         
-                        SecurityScore = fullScore;
-                        WeakPasswords = fullScore.WeakPasswords;
-                        DuplicatePasswords = fullScore.DuplicatePasswords;
-                        CompromisedPasswords = fullScore.CompromisedPasswords;
-                        StrongPasswords = fullScore.StrongPasswords;
-                        ScoreLevel = fullScore.GetScoreLevel();
-                        ScoreColor = fullScore.GetScoreColor();
+                        // Update on UI thread
+                        if (_dispatcherQueue != null)
+                        {
+                            _dispatcherQueue.TryEnqueue(() =>
+                            {
+                                SecurityScore = fullScore;
+                                WeakPasswords = fullScore.WeakPasswords;
+                                DuplicatePasswords = fullScore.DuplicatePasswords;
+                                CompromisedPasswords = fullScore.CompromisedPasswords;
+                                StrongPasswords = fullScore.StrongPasswords;
+                                ScoreLevel = fullScore.GetScoreLevel();
+                                ScoreColor = fullScore.GetScoreColor();
+                            });
+                        }
+                        else
+                        {
+                            // Fallback if DispatcherQueue not set
+                            SecurityScore = fullScore;
+                            WeakPasswords = fullScore.WeakPasswords;
+                            DuplicatePasswords = fullScore.DuplicatePasswords;
+                            CompromisedPasswords = fullScore.CompromisedPasswords;
+                            StrongPasswords = fullScore.StrongPasswords;
+                            ScoreLevel = fullScore.GetScoreLevel();
+                            ScoreColor = fullScore.GetScoreColor();
+                        }
                     }
                     catch (Exception ex)
                     {
