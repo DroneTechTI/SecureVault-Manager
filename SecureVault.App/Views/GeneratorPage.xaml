@@ -5,31 +5,31 @@
 
     <ScrollViewer>
         <StackPanel Padding="24" Spacing="24" MaxWidth="800">
-            <TextBlock Text="Password Generator" FontSize="32" FontWeight="Bold"/>
+            <TextBlock Text="Generatore di Password" FontSize="32" FontWeight="Bold"/>
 
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="16">
-                    <TextBlock x:Name="GeneratedPasswordText" Text="Click Generate to create a password" FontSize="24" FontFamily="Consolas" TextWrapping="Wrap" HorizontalAlignment="Center"/>
+                    <TextBlock x:Name="GeneratedPasswordText" Text="Clicca Genera per creare una password" FontSize="24" FontFamily="Consolas" TextWrapping="Wrap" HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
-                        <Button Content="Generate" Click="OnGenerateClick" Style="{StaticResource AccentButtonStyle}"/>
-                        <Button Content="Copy" Click="OnCopyClick"/>
+                        <Button Content="Genera" Click="OnGenerateClick" Style="{StaticResource AccentButtonStyle}"/>
+                        <Button Content="Copia" Click="OnCopyClick"/>
                     </StackPanel>
                 </StackPanel>
             </Border>
 
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="16">
-                    <TextBlock Text="Options" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock Text="Opzioni" FontSize="20" FontWeight="SemiBold"/>
                     <StackPanel Spacing="8">
-                        <TextBlock Text="Password Length"/>
-                        <Slider x:Name="LengthSlider" Minimum="8" Maximum="64" Value="16" StepFrequency="1"/>
-                        <TextBlock x:Name="LengthValueText" Text="16" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="Lunghezza Password"/>
+                        <Slider x:Name="LengthSlider" Minimum="8" Maximum="64" Value="16" StepFrequency="1" ValueChanged="OnLengthChanged"/>
+                        <TextBlock x:Name="LengthValueText" Text="16 caratteri" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
-                    <ToggleSwitch x:Name="UppercaseToggle" Header="Include Uppercase (A-Z)" IsOn="True"/>
-                    <ToggleSwitch x:Name="LowercaseToggle" Header="Include Lowercase (a-z)" IsOn="True"/>
-                    <ToggleSwitch x:Name="DigitsToggle" Header="Include Numbers (0-9)" IsOn="True"/>
-                    <ToggleSwitch x:Name="SpecialToggle" Header="Include Special Characters" IsOn="True"/>
-                    <ToggleSwitch x:Name="AvoidAmbiguousToggle" Header="Avoid Ambiguous Characters" IsOn="True"/>
+                    <ToggleSwitch x:Name="UppercaseToggle" Header="Includi Maiuscole (A-Z)" IsOn="True"/>
+                    <ToggleSwitch x:Name="LowercaseToggle" Header="Includi Minuscole (a-z)" IsOn="True"/>
+                    <ToggleSwitch x:Name="DigitsToggle" Header="Includi Numeri (0-9)" IsOn="True"/>
+                    <ToggleSwitch x:Name="SpecialToggle" Header="Includi Caratteri Speciali (!@#$)" IsOn="True"/>
+                    <ToggleSwitch x:Name="AvoidAmbiguousToggle" Header="Evita Caratteri Ambigui (0,O,1,l)" IsOn="True"/>
                 </StackPanel>
             </Border>
         </StackPanel>

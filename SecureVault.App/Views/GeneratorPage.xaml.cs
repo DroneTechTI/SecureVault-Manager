@@ -17,6 +17,14 @@ public sealed partial class GeneratorPage : Page
         _generatorService = App.Services.GetRequiredService<IPasswordGeneratorService>();
     }
 
+    private void OnLengthChanged(object sender, Microsoft.UI.Xaml.Controls.Primitives.RangeBaseValueChangedEventArgs e)
+    {
+        if (LengthValueText != null)
+        {
+            LengthValueText.Text = $"{(int)e.NewValue} caratteri";
+        }
+    }
+
     private void OnGenerateClick(object sender, RoutedEventArgs e)
     {
         var options = new PasswordGeneratorOptions
@@ -33,22 +41,28 @@ public sealed partial class GeneratorPage : Page
         {
             var password = _generatorService.GeneratePassword(options);
             GeneratedPasswordText.Text = password;
-            LengthValueText.Text = ((int)LengthSlider.Value).ToString();
         }
         catch (Exception ex)
         {
-            GeneratedPasswordText.Text = $"Error: {ex.Message}";
+            GeneratedPasswordText.Text = $"Errore: {ex.Message}";
         }
     }
 
     private void OnCopyClick(object sender, RoutedEventArgs e)
     {
-        if (GeneratedPasswordText.Text != "Click Generate to create a password" && 
-            !GeneratedPasswordText.Text.StartsWith("Error:"))
+        if (GeneratedPasswordText.Text != "Clicca Genera per creare una password" && 
+            !GeneratedPasswordText.Text.StartsWith("Errore:"))
         {
             var dataPackage = new DataPackage();
             dataPackage.SetText(GeneratedPasswordText.Text);
             Clipboard.SetContent(dataPackage);
+            
+            // Show feedback
+            GeneratedPasswordText.Text = "✅ Copiato negli appunti!";
+            Task.Delay(1500).ContinueWith(_ => 
+            {
+                DispatcherQueue.TryEnqueue(() => OnGenerateClick(null, null));
+            });
         }
     }
 }
