@@ -37,6 +37,20 @@
             </StackPanel>
 
             <StackPanel Spacing="16">
+                <TextBlock Text="Lingua / Language" FontSize="20" FontWeight="SemiBold"/>
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Seleziona la lingua dell'applicazione / Select application language"/>
+                        <RadioButtons x:Name="LanguageSelector" SelectionChanged="OnLanguageChanged">
+                            <RadioButton Content="🇮🇹 Italiano" Tag="it"/>
+                            <RadioButton Content="🇬🇧 English" Tag="en"/>
+                        </RadioButtons>
+                        <TextBlock Text="⚠️ L'applicazione verrà riavviata / The application will restart" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Spacing="16">
                 <TextBlock Text="Informazioni" FontSize="20" FontWeight="SemiBold"/>
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="8">

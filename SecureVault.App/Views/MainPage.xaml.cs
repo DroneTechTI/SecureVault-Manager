@@ -53,6 +53,9 @@ namespace SecureVault.App.Views
                     case "Security":
                         ContentFrame.Navigate(typeof(SecurityPage));
                         break;
+                    case "Duplicates":
+                        ContentFrame.Navigate(typeof(DuplicatePasswordsPage));
+                        break;
                 }
             }
         }

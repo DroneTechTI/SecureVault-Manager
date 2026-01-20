@@ -46,13 +46,13 @@ public sealed partial class AuthenticationPage : Page
         }
     }
 
-    private async void OnUnlockClick(object sender, RoutedEventArgs e)
+    private async void OnUnlockClick(object? sender, RoutedEventArgs? e)
     {
         ViewModel.MasterPassword = MasterPasswordBox.Password;
         await ViewModel.UnlockVaultCommand.ExecuteAsync(null);
     }
 
-    private async void OnCreateClick(object sender, RoutedEventArgs e)
+    private async void OnCreateClick(object? sender, RoutedEventArgs? e)
     {
         ViewModel.MasterPassword = MasterPasswordBox.Password;
         ViewModel.ConfirmPassword = ConfirmPasswordBox.Password;
