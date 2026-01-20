@@ -306,4 +306,89 @@ public sealed partial class CredentialsPage : Page
             ViewModel.CreateGroups();
         }
     }
+
+    private async void OnViewNotesClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        if (vm == null) return;
+
+        var textBox = new TextBox
+        {
+            Text = vm.Notes,
+            AcceptsReturn = true,
+            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap,
+            Height = 150,
+            PlaceholderText = "Aggiungi note per questa credenziale..."
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = $"📝 Note - {vm.Title}",
+            Content = textBox,
+            PrimaryButtonText = "Salva",
+            CloseButtonText = "Annulla",
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = this.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            try
+            {
+                // Update notes - get all credentials and find the one to update
+                var credentials = await _vaultService.GetAllCredentialsAsync();
+                var credential = credentials.FirstOrDefault(c => c.Id == vm.Id);
+                
+                if (credential != null)
+                {
+                    credential.Notes = textBox.Text;
+                    credential.ModifiedAt = DateTime.UtcNow;
+                    await _vaultService.UpdateCredentialAsync(credential);
+                    
+                    // Refresh the view
+                    await RefreshCredentialsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving notes: {ex.Message}");
+            }
+        }
+    }
+
+    private async Task RefreshCredentialsAsync()
+    {
+        LoadingRing.IsActive = true;
+        
+        try
+        {
+            ViewModel.Credentials.Clear();
+            _allCredentials.Clear();
+            
+            var credentials = await _vaultService.GetAllCredentialsAsync();
+            
+            foreach (var cred in credentials)
+            {
+                var vm = new CredentialItemViewModel(cred, null, _vaultService, 
+                    App.Services.GetRequiredService<IPasswordGeneratorService>());
+                ViewModel.Credentials.Add(vm);
+                _allCredentials.Add(vm);
+            }
+            
+            if (ViewModel.IsGroupedView)
+            {
+                ViewModel.CreateGroups();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error refreshing credentials: {ex.Message}");
+        }
+        finally
+        {
+            LoadingRing.IsActive = false;
+        }
+    }
 }

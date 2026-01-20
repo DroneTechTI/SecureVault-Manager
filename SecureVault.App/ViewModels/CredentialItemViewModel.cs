@@ -28,6 +28,7 @@ public partial class CredentialItemViewModel : ObservableObject
     public string Url => _credential.Url;
     public string Domain => _credential.Domain;
     public string Notes => _credential.Notes;
+    public bool HasNotes => !string.IsNullOrWhiteSpace(_credential.Notes);
 
     [ObservableProperty]
     private int _passwordStrength;
