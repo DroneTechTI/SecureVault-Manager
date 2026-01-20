@@ -61,24 +61,50 @@ public partial class DashboardViewModel : ObservableObject
 
             if (credentials.Count > 0)
             {
-                SecurityScore = await _analysisService.CalculateSecurityScoreAsync(credentials);
-
-                WeakPasswords = SecurityScore.WeakPasswords;
-                DuplicatePasswords = SecurityScore.DuplicatePasswords;
-                CompromisedPasswords = SecurityScore.CompromisedPasswords;
-                StrongPasswords = SecurityScore.StrongPasswords;
-                ScoreLevel = SecurityScore.GetScoreLevel();
-                ScoreColor = SecurityScore.GetScoreColor();
+                // Show initial data immediately
+                WeakPasswords = 0;
+                DuplicatePasswords = 0;
+                CompromisedPasswords = 0;
+                StrongPasswords = 0;
+                ScoreLevel = "Analisi in corso...";
+                
+                // Calculate in background without blocking
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        var score = await _analysisService.CalculateSecurityScoreAsync(credentials);
+                        
+                        // Update on UI thread
+                        SecurityScore = score;
+                        WeakPasswords = score.WeakPasswords;
+                        DuplicatePasswords = score.DuplicatePasswords;
+                        CompromisedPasswords = score.CompromisedPasswords;
+                        StrongPasswords = score.StrongPasswords;
+                        ScoreLevel = score.GetScoreLevel();
+                        ScoreColor = score.GetScoreColor();
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Diagnostics.Debug.WriteLine($"Error analyzing: {ex.Message}");
+                        ScoreLevel = "Errore analisi";
+                    }
+                });
             }
             else
             {
                 SecurityScore = new SecurityScore { OverallScore = 0 };
-                ScoreLevel = "No Data";
+                ScoreLevel = "Nessun dato";
+                WeakPasswords = 0;
+                DuplicatePasswords = 0;
+                CompromisedPasswords = 0;
+                StrongPasswords = 0;
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"Error loading dashboard: {ex.Message}");
+            ScoreLevel = "Errore";
         }
         finally
         {

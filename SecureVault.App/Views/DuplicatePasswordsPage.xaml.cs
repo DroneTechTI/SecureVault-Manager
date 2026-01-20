@@ -189,17 +189,24 @@ public sealed partial class DuplicatePasswordsPage : Page
 
         var generateBtn = new Button
         {
-            Content = "Genera Nuova",
+            Content = "🔐 Genera Nuova",
             Tag = account
         };
         generateBtn.Click += OnGenerateForAccountClick;
 
         var openSiteBtn = new Button
         {
-            Content = "Apri Sito",
+            Content = "🌐 Apri Sito",
             Tag = account
         };
         openSiteBtn.Click += OnOpenAccountSiteClick;
+
+        var deleteBtn = new Button
+        {
+            Content = "🗑️ Elimina",
+            Tag = account
+        };
+        deleteBtn.Click += OnDeleteAccountClick;
 
         var markDoneBtn = new Button
         {
@@ -211,6 +218,7 @@ public sealed partial class DuplicatePasswordsPage : Page
 
         actionsStack.Children.Add(generateBtn);
         actionsStack.Children.Add(openSiteBtn);
+        actionsStack.Children.Add(deleteBtn);
         actionsStack.Children.Add(markDoneBtn);
 
         grid.Children.Add(infoStack);
@@ -404,6 +412,30 @@ public sealed partial class DuplicatePasswordsPage : Page
     private async void OnRefreshClick(object sender, RoutedEventArgs e)
     {
         await LoadDuplicatesAsync();
+    }
+
+    private async void OnDeleteAccountClick(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var account = button?.Tag as Credential;
+        if (account == null) return;
+
+        var dialog = new ContentDialog
+        {
+            Title = "Conferma Eliminazione",
+            Content = $"Sei sicuro di voler eliminare questo account?\n\n{account.Title}\n{account.Username}\n\n⚠️ Questa operazione NON può essere annullata!",
+            PrimaryButtonText = "Elimina",
+            CloseButtonText = "Annulla",
+            DefaultButton = ContentDialogButton.Close,
+            XamlRoot = this.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            await _vaultService.DeleteCredentialAsync(account.Id);
+            await LoadDuplicatesAsync();
+        }
     }
 
     private string GetPasswordChangeUrl(string url)
