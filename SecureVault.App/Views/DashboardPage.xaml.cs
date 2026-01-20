@@ -39,7 +39,7 @@ public sealed partial class DashboardPage : Page
             ScoreText.Text = "...";
             StrongPasswordsText.Text = "...";
             WeakPasswordsText.Text = "...";
-            CompromisedPasswordsText.Text = "...";
+            // CompromisedPasswords now uses binding
             
             LoadingRing.IsActive = false;
             
@@ -63,7 +63,7 @@ public sealed partial class DashboardPage : Page
                             ScoreLevelText.Text = ViewModel.ScoreLevel;
                             StrongPasswordsText.Text = ViewModel.StrongPasswords.ToString();
                             WeakPasswordsText.Text = ViewModel.WeakPasswords.ToString();
-                            CompromisedPasswordsText.Text = ViewModel.CompromisedPasswords.ToString();
+                            // CompromisedPasswords now uses binding, no need to set manually
                             
                             System.Diagnostics.Debug.WriteLine($"DashboardPage: UI updated - Compromised: {ViewModel.CompromisedPasswords}");
                         }
