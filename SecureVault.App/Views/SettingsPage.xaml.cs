@@ -34,24 +34,33 @@ public sealed partial class SettingsPage : Page
 
     private async void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
     {
-        if (LanguageSelector.SelectedItem is RadioButton radio)
+        if (e.AddedItems.Count == 0) return; // Prevent crash on initial load
+        
+        if (e.AddedItems[0] is RadioButton radio)
         {
             var newLang = radio.Tag?.ToString();
             if (newLang != null && newLang != _localization.CurrentLanguage)
             {
-                _localization.SetLanguage(newLang);
-                
-                var dialog = new ContentDialog
+                try
                 {
-                    Title = newLang == "it" ? "Lingua Cambiata" : "Language Changed",
-                    Content = newLang == "it" ? 
-                        "La lingua è stata cambiata in Italiano.\n\nRiavvia l'applicazione per applicare le modifiche." :
-                        "Language has been changed to English.\n\nRestart the application to apply changes.",
-                    CloseButtonText = "OK",
-                    XamlRoot = this.XamlRoot
-                };
-                
-                await dialog.ShowAsync();
+                    _localization.SetLanguage(newLang);
+                    
+                    var dialog = new ContentDialog
+                    {
+                        Title = newLang == "it" ? "Lingua Cambiata" : "Language Changed",
+                        Content = newLang == "it" ? 
+                            "La lingua è stata cambiata in Italiano.\n\nRiavvia l'applicazione per applicare le modifiche." :
+                            "Language has been changed to English.\n\nRestart the application to apply changes.",
+                        CloseButtonText = "OK",
+                        XamlRoot = this.XamlRoot
+                    };
+                    
+                    await dialog.ShowAsync();
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Language change error: {ex.Message}");
+                }
             }
         }
     }
