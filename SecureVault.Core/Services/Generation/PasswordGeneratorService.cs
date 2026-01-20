@@ -150,23 +150,38 @@ public class PasswordGeneratorService : IPasswordGeneratorService
 
         if (options.UseUppercase)
         {
-            pool.Append(options.AvoidAmbiguous ? 
-                UppercaseChars.Where(c => !AmbiguousChars.Contains(c)).ToArray() : 
-                UppercaseChars);
+            if (options.AvoidAmbiguous)
+            {
+                pool.Append(new string(UppercaseChars.Where(c => !AmbiguousChars.Contains(c)).ToArray()));
+            }
+            else
+            {
+                pool.Append(UppercaseChars);
+            }
         }
 
         if (options.UseLowercase)
         {
-            pool.Append(options.AvoidAmbiguous ? 
-                LowercaseChars.Where(c => !AmbiguousChars.Contains(c)).ToArray() : 
-                LowercaseChars);
+            if (options.AvoidAmbiguous)
+            {
+                pool.Append(new string(LowercaseChars.Where(c => !AmbiguousChars.Contains(c)).ToArray()));
+            }
+            else
+            {
+                pool.Append(LowercaseChars);
+            }
         }
 
         if (options.UseDigits)
         {
-            pool.Append(options.AvoidAmbiguous ? 
-                DigitChars.Where(c => !AmbiguousChars.Contains(c)).ToArray() : 
-                DigitChars + "01");
+            if (options.AvoidAmbiguous)
+            {
+                pool.Append(new string(DigitChars.Where(c => !AmbiguousChars.Contains(c)).ToArray()));
+            }
+            else
+            {
+                pool.Append(DigitChars + "01");
+            }
         }
 
         if (options.UseSpecialChars)
@@ -205,6 +220,6 @@ public class PasswordGeneratorService : IPasswordGeneratorService
         RandomNumberGenerator.Fill(randomBytes);
         
         ulong randomValue = BitConverter.ToUInt64(randomBytes, 0);
-        return (int)(minValue + (randomValue % (ulong)range));
+        return (int)((long)minValue + (long)(randomValue % (ulong)range));
     }
 }
