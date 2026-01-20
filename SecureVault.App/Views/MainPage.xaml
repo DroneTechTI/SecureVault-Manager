@@ -40,6 +40,11 @@
                         <FontIcon Glyph="&#xE72E;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
+                <NavigationViewItem Content="⚠️ Duplicati" Tag="Duplicates">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE8C8;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
             </NavigationView.MenuItems>
 
             <NavigationView.PaneFooter>

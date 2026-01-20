@@ -12,7 +12,7 @@ public partial class SettingsViewModel : ObservableObject
 {
     private readonly IVaultService _vaultService;
     private readonly IExportService _exportService;
-    private VaultConfiguration _configuration;
+    private VaultConfiguration _configuration = new();
 
     [ObservableProperty]
     private int _autoLockMinutes;
