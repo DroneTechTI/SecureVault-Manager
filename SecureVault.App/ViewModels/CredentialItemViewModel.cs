@@ -29,6 +29,9 @@ public partial class CredentialItemViewModel : ObservableObject
     public string Domain => _credential.Domain;
     public string Notes => _credential.Notes;
     public bool HasNotes => !string.IsNullOrWhiteSpace(_credential.Notes);
+    public string[] Tags => _credential.Tags;
+    public bool HasTags => _credential.Tags != null && _credential.Tags.Length > 0;
+    public string TagsDisplay => HasTags ? string.Join(", ", _credential.Tags) : "";
 
     [ObservableProperty]
     private int _passwordStrength;

@@ -391,4 +391,75 @@ public sealed partial class CredentialsPage : Page
             LoadingRing.IsActive = false;
         }
     }
+
+    private async void OnManageTagsClick(object sender, RoutedEventArgs e)
+    {
+        var item = sender as MenuFlyoutItem;
+        var vm = item?.Tag as CredentialItemViewModel;
+        if (vm == null) return;
+
+        var textBox = new TextBox
+        {
+            Text = string.Join(", ", vm.Tags),
+            PlaceholderText = "Es: Lavoro, Social, Bancario (separati da virgola)",
+            TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
+        };
+
+        var dialog = new ContentDialog
+        {
+            Title = $"🏷️ Categorie - {vm.Title}",
+            Content = new StackPanel
+            {
+                Spacing = 8,
+                Children =
+                {
+                    new TextBlock 
+                    { 
+                        Text = "Inserisci le categorie separate da virgola:",
+                        TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap 
+                    },
+                    textBox,
+                    new TextBlock
+                    {
+                        Text = "💡 Suggerimenti: Lavoro, Personale, Social, Bancario, Shopping, Email",
+                        FontSize = 11,
+                        Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Gray),
+                        TextWrapping = Microsoft.UI.Xaml.TextWrapping.Wrap
+                    }
+                }
+            },
+            PrimaryButtonText = "Salva",
+            CloseButtonText = "Annulla",
+            DefaultButton = ContentDialogButton.Primary,
+            XamlRoot = this.XamlRoot
+        };
+
+        var result = await dialog.ShowAsync();
+        if (result == ContentDialogResult.Primary)
+        {
+            try
+            {
+                var credentials = await _vaultService.GetAllCredentialsAsync();
+                var credential = credentials.FirstOrDefault(c => c.Id == vm.Id);
+                
+                if (credential != null)
+                {
+                    // Parse tags
+                    var tagsText = textBox.Text.Trim();
+                    credential.Tags = string.IsNullOrWhiteSpace(tagsText) 
+                        ? Array.Empty<string>()
+                        : tagsText.Split(',').Select(t => t.Trim()).Where(t => !string.IsNullOrWhiteSpace(t)).ToArray();
+                    
+                    credential.ModifiedAt = DateTime.UtcNow;
+                    await _vaultService.UpdateCredentialAsync(credential);
+                    
+                    await RefreshCredentialsAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error saving tags: {ex.Message}");
+            }
+        }
+    }
 }
