@@ -18,19 +18,29 @@ public sealed partial class DashboardPage : Page
     protected override async void OnNavigatedTo(NavigationEventArgs e)
     {
         base.OnNavigatedTo(e);
-        await ViewModel.LoadDataCommand.ExecuteAsync(null);
         
-        // Update UI
-        if (ViewModel.SecurityScore != null)
+        LoadingRing.IsActive = true;
+        
+        // Load data in background
+        _ = Task.Run(async () =>
         {
-            ScoreText.Text = ViewModel.SecurityScore.OverallScore.ToString();
-            ScoreLevelText.Text = ViewModel.ScoreLevel;
-            TotalCredentialsText.Text = ViewModel.TotalCredentials.ToString();
-            StrongPasswordsText.Text = ViewModel.StrongPasswords.ToString();
-            WeakPasswordsText.Text = ViewModel.WeakPasswords.ToString();
-            CompromisedPasswordsText.Text = ViewModel.CompromisedPasswords.ToString();
-        }
-        
-        LoadingRing.IsActive = ViewModel.IsLoading;
+            await ViewModel.LoadDataCommand.ExecuteAsync(null);
+            
+            // Update UI on UI thread
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                if (ViewModel.SecurityScore != null)
+                {
+                    ScoreText.Text = ViewModel.SecurityScore.OverallScore.ToString();
+                    ScoreLevelText.Text = ViewModel.ScoreLevel;
+                    TotalCredentialsText.Text = ViewModel.TotalCredentials.ToString();
+                    StrongPasswordsText.Text = ViewModel.StrongPasswords.ToString();
+                    WeakPasswordsText.Text = ViewModel.WeakPasswords.ToString();
+                    CompromisedPasswordsText.Text = ViewModel.CompromisedPasswords.ToString();
+                }
+                
+                LoadingRing.IsActive = false;
+            });
+        });
     }
 }

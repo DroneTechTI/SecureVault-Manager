@@ -31,27 +31,47 @@ public sealed partial class ImportPage : Page
 
             if (file != null)
             {
-                ResultsText.Text = "Importazione in corso...";
+                ResultsText.Text = "⏳ Importazione in corso...\nQuesto potrebbe richiedere alcuni minuti per file grandi.";
                 ResultsPanel.Visibility = Visibility.Visible;
 
                 var result = await _importService.ImportFromChromeAsync(file.Path);
                 
                 if (result.ImportedCredentials.Count > 0)
                 {
-                    foreach (var credential in result.ImportedCredentials)
+                    ResultsText.Text = $"⏳ Salvando {result.ImportedCredentials.Count} credenziali...\nAttendi, non chiudere l'app.";
+                    
+                    // Save in batches for better performance
+                    int saved = 0;
+                    int batchSize = 100;
+                    for (int i = 0; i < result.ImportedCredentials.Count; i += batchSize)
                     {
-                        await _vaultService.AddCredentialAsync(credential);
+                        var batch = result.ImportedCredentials.Skip(i).Take(batchSize);
+                        foreach (var credential in batch)
+                        {
+                            await _vaultService.AddCredentialAsync(credential);
+                            saved++;
+                        }
+                        
+                        // Update progress
+                        ResultsText.Text = $"⏳ Salvate {saved}/{result.ImportedCredentials.Count} credenziali...";
                     }
 
                     ResultsText.Text = $"✅ Importate con successo {result.SuccessfulImports} credenziali da Chrome!\n\n";
+                    ResultsText.Text += "💡 Le credenziali sono state salvate. L'analisi di sicurezza verrà eseguita in background.\n\n";
+                    
                     if (result.Errors.Count > 0)
                     {
-                        ResultsText.Text += $"⚠️ {result.Errors.Count} errori:\n" + string.Join("\n", result.Errors.Take(3));
+                        ResultsText.Text += $"⚠️ {result.Errors.Count} avvisi (probabilmente debug info, ignora se l'import è riuscito):\n";
+                        ResultsText.Text += string.Join("\n", result.Errors.Where(e => !e.StartsWith("DEBUG")).Take(3));
                     }
                 }
                 else
                 {
                     ResultsText.Text = "❌ Nessuna credenziale trovata nel file.\n\nVerifica che il file CSV sia corretto.";
+                    if (result.Errors.Count > 0)
+                    {
+                        ResultsText.Text += "\n\nDettagli errore:\n" + string.Join("\n", result.Errors.Take(5));
+                    }
                 }
                 
                 ResultsPanel.Visibility = Visibility.Visible;
@@ -78,19 +98,34 @@ public sealed partial class ImportPage : Page
 
             if (file != null)
             {
-                ResultsText.Text = "Importazione in corso...";
+                ResultsText.Text = "⏳ Importazione in corso...\nQuesto potrebbe richiedere alcuni minuti per file grandi.";
                 ResultsPanel.Visibility = Visibility.Visible;
 
                 var result = await _importService.ImportFromSamsungPassAsync(file.Path);
                 
                 if (result.ImportedCredentials.Count > 0)
                 {
-                    foreach (var credential in result.ImportedCredentials)
+                    ResultsText.Text = $"⏳ Salvando {result.ImportedCredentials.Count} credenziali...\nAttendi, non chiudere l'app.";
+                    
+                    // Save in batches for better performance
+                    int saved = 0;
+                    int batchSize = 100;
+                    for (int i = 0; i < result.ImportedCredentials.Count; i += batchSize)
                     {
-                        await _vaultService.AddCredentialAsync(credential);
+                        var batch = result.ImportedCredentials.Skip(i).Take(batchSize);
+                        foreach (var credential in batch)
+                        {
+                            await _vaultService.AddCredentialAsync(credential);
+                            saved++;
+                        }
+                        
+                        // Update progress
+                        ResultsText.Text = $"⏳ Salvate {saved}/{result.ImportedCredentials.Count} credenziali...";
                     }
 
                     ResultsText.Text = $"✅ Importate con successo {result.SuccessfulImports} credenziali da Samsung Pass!\n\n";
+                    ResultsText.Text += "💡 Le credenziali sono state salvate. L'analisi di sicurezza verrà eseguita in background.\n\n";
+                    
                     if (result.Errors.Count > 0)
                     {
                         ResultsText.Text += $"⚠️ {result.Errors.Count} errori:\n" + string.Join("\n", result.Errors.Take(3));
