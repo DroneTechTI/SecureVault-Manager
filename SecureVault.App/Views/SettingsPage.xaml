@@ -41,9 +41,9 @@
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="12">
                         <TextBlock Text="Seleziona la lingua dell'applicazione / Select application language"/>
-                        <RadioButtons x:Name="LanguageSelector" SelectionChanged="OnLanguageChanged">
-                            <RadioButton Content="🇮🇹 Italiano" Tag="it"/>
-                            <RadioButton Content="🇬🇧 English" Tag="en"/>
+                        <RadioButtons x:Name="LanguageSelector">
+                            <RadioButton Content="🇮🇹 Italiano" Tag="it" Checked="OnLanguageRadioChecked"/>
+                            <RadioButton Content="🇬🇧 English" Tag="en" Checked="OnLanguageRadioChecked"/>
                         </RadioButtons>
                         <TextBlock Text="⚠️ L'applicazione verrà riavviata / The application will restart" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>

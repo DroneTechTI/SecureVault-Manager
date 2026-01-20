@@ -20,6 +20,7 @@ public sealed partial class SettingsPage : Page
         // Set current language after UI is loaded
         this.Loaded += (s, e) =>
         {
+            _isLoadingLanguage = true;
             var currentLang = _localization.CurrentLanguage;
             foreach (var item in LanguageSelector.Items)
             {
@@ -29,14 +30,18 @@ public sealed partial class SettingsPage : Page
                     break;
                 }
             }
+            _isLoadingLanguage = false;
         };
     }
 
-    private async void OnLanguageChanged(object sender, SelectionChangedEventArgs e)
+    private bool _isLoadingLanguage = false;
+
+    private async void OnLanguageRadioChecked(object sender, RoutedEventArgs e)
     {
-        if (e.AddedItems.Count == 0) return; // Prevent crash on initial load
+        // Prevent triggering during initial load
+        if (_isLoadingLanguage) return;
         
-        if (e.AddedItems[0] is RadioButton radio)
+        if (sender is RadioButton radio)
         {
             var newLang = radio.Tag?.ToString();
             if (newLang != null && newLang != _localization.CurrentLanguage)

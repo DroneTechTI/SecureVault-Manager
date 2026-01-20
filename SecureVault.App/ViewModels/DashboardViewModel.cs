@@ -10,7 +10,7 @@ namespace SecureVault.App.ViewModels;
 /// </summary>
 public partial class DashboardViewModel : ObservableObject
 {
-    private readonly IVaultService _vaultService;
+    public readonly IVaultService _vaultService;
     private readonly IPasswordAnalysisService _analysisService;
 
     [ObservableProperty]
@@ -61,33 +61,49 @@ public partial class DashboardViewModel : ObservableObject
 
             if (credentials.Count > 0)
             {
-                // Show initial data immediately
-                WeakPasswords = 0;
-                DuplicatePasswords = 0;
-                CompromisedPasswords = 0;
-                StrongPasswords = 0;
-                ScoreLevel = "Analisi in corso...";
+                // Calculate quick estimates without HIBP check
+                var quickAnalysis = await AnalyzeQuickAsync(credentials);
                 
-                // Calculate in background without blocking
+                WeakPasswords = quickAnalysis.WeakCount;
+                DuplicatePasswords = quickAnalysis.DuplicateCount;
+                StrongPasswords = quickAnalysis.StrongCount;
+                CompromisedPasswords = 0; // Will be updated later
+                
+                // Estimate initial score
+                int estimatedScore = 100;
+                estimatedScore -= (int)((WeakPasswords / (double)TotalCredentials) * 30);
+                estimatedScore -= (int)((DuplicatePasswords / (double)TotalCredentials) * 30);
+                
+                SecurityScore = new SecurityScore 
+                { 
+                    OverallScore = Math.Clamp(estimatedScore, 0, 100),
+                    TotalCredentials = TotalCredentials,
+                    WeakPasswords = WeakPasswords,
+                    DuplicatePasswords = DuplicatePasswords,
+                    StrongPasswords = StrongPasswords
+                };
+                
+                ScoreLevel = SecurityScore.GetScoreLevel();
+                ScoreColor = SecurityScore.GetScoreColor();
+                
+                // Check compromised passwords in background (slow operation)
                 _ = Task.Run(async () =>
                 {
                     try
                     {
-                        var score = await _analysisService.CalculateSecurityScoreAsync(credentials);
+                        var fullScore = await _analysisService.CalculateSecurityScoreAsync(credentials);
                         
-                        // Update on UI thread
-                        SecurityScore = score;
-                        WeakPasswords = score.WeakPasswords;
-                        DuplicatePasswords = score.DuplicatePasswords;
-                        CompromisedPasswords = score.CompromisedPasswords;
-                        StrongPasswords = score.StrongPasswords;
-                        ScoreLevel = score.GetScoreLevel();
-                        ScoreColor = score.GetScoreColor();
+                        SecurityScore = fullScore;
+                        WeakPasswords = fullScore.WeakPasswords;
+                        DuplicatePasswords = fullScore.DuplicatePasswords;
+                        CompromisedPasswords = fullScore.CompromisedPasswords;
+                        StrongPasswords = fullScore.StrongPasswords;
+                        ScoreLevel = fullScore.GetScoreLevel();
+                        ScoreColor = fullScore.GetScoreColor();
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Error analyzing: {ex.Message}");
-                        ScoreLevel = "Errore analisi";
+                        System.Diagnostics.Debug.WriteLine($"Error in full analysis: {ex.Message}");
                     }
                 });
             }
@@ -110,5 +126,30 @@ public partial class DashboardViewModel : ObservableObject
         {
             IsLoading = false;
         }
+    }
+    
+    private async Task<(int WeakCount, int DuplicateCount, int StrongCount)> AnalyzeQuickAsync(List<Credential> credentials)
+    {
+        return await Task.Run(() =>
+        {
+            int weakCount = 0;
+            int strongCount = 0;
+            
+            // Quick strength check without HIBP
+            foreach (var cred in credentials)
+            {
+                var strength = _analysisService.CalculatePasswordStrength(cred.Password);
+                if (strength.Score < 60)
+                    weakCount++;
+                else if (strength.Score >= 80)
+                    strongCount++;
+            }
+            
+            // Check duplicates
+            var duplicates = _analysisService.FindDuplicatePasswords(credentials);
+            int duplicateCount = duplicates.SelectMany(g => g.Value).Count();
+            
+            return (weakCount, duplicateCount, strongCount);
+        });
     }
 }

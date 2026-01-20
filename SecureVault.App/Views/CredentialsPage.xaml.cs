@@ -30,56 +30,53 @@ public sealed partial class CredentialsPage : Page
         
         try
         {
-            // Get quick count
-            var quickCount = await _vaultService.GetAllCredentialsAsync();
+            // Load credentials in batches for better performance
+            var credentials = await _vaultService.GetAllCredentialsAsync();
             
-            if (quickCount.Count > 500)
+            DispatcherQueue.TryEnqueue(() =>
             {
-                // Show warning for large datasets
-                System.Diagnostics.Debug.WriteLine($"Loading {quickCount.Count} credentials - this may take time");
-            }
-            
-            // Load WITHOUT full analysis first (faster)
-            await Task.Run(async () =>
-            {
-                // Load credentials WITHOUT analysis initially
-                var credentials = await _vaultService.GetAllCredentialsAsync();
+                ViewModel.Credentials.Clear();
                 
-                DispatcherQueue.TryEnqueue(() =>
+                // Show first 50 immediately (smaller batch for faster initial load)
+                var firstBatch = credentials.Take(50).ToList();
+                foreach (var cred in firstBatch)
                 {
-                    // Show credentials immediately without analysis
-                    ViewModel.Credentials.Clear();
-                    foreach (var cred in credentials.Take(100)) // Show first 100 immediately
+                    var vm = new CredentialItemViewModel(cred, null, _vaultService, 
+                        App.Services.GetRequiredService<IPasswordGeneratorService>());
+                    ViewModel.Credentials.Add(vm);
+                }
+                
+                CredentialsList.ItemsSource = ViewModel.Credentials;
+                LoadingRing.IsActive = false;
+                
+                // Load remaining in background with larger batches
+                if (credentials.Count > 50)
+                {
+                    _ = Task.Run(() =>
                     {
-                        var vm = new CredentialItemViewModel(cred, null, _vaultService, 
-                            App.Services.GetRequiredService<IPasswordGeneratorService>());
-                        ViewModel.Credentials.Add(vm);
-                    }
-                    
-                    CredentialsList.ItemsSource = ViewModel.Credentials;
-                    LoadingRing.IsActive = false;
-                    
-                    // Load rest in background
-                    if (credentials.Count > 100)
-                    {
-                        _ = Task.Run(() =>
+                        var remaining = credentials.Skip(50).ToList();
+                        var batchSize = 100;
+                        
+                        for (int i = 0; i < remaining.Count; i += batchSize)
                         {
-                            for (int i = 100; i < credentials.Count; i++)
+                            var batch = remaining.Skip(i).Take(batchSize).ToList();
+                            
+                            DispatcherQueue.TryEnqueue(() =>
                             {
-                                var cred = credentials[i];
-                                DispatcherQueue.TryEnqueue(() =>
+                                foreach (var cred in batch)
                                 {
                                     var vm = new CredentialItemViewModel(cred, null, _vaultService,
                                         App.Services.GetRequiredService<IPasswordGeneratorService>());
                                     ViewModel.Credentials.Add(vm);
-                                });
-                                
-                                if (i % 50 == 0)
-                                    Task.Delay(10).Wait(); // Small delay to keep UI responsive
-                            }
-                        });
-                    }
-                });
+                                }
+                            });
+                            
+                            // Small delay between batches to keep UI responsive
+                            if (i + batchSize < remaining.Count)
+                                Task.Delay(5).Wait();
+                        }
+                    });
+                }
             });
         }
         catch (Exception ex)
