@@ -74,18 +74,12 @@ You need to install these tools first:
    - Visual Studio will automatically download required components
    - If not, right-click on the solution in Solution Explorer and select "Restore NuGet Packages"
 
-3. **Fix XAML compilation** (if needed)
-   - The XAML views are complete but may have minor compilation issues
-   - Visual Studio provides better error messages than command-line builds
-   - Check Error List window for specific XAML errors
-   - Common fixes: Remove x:Bind expressions or add proper DataType attributes
-
-4. **Build the application**
+3. **Build the application**
    - At the top of Visual Studio, make sure the dropdown says "Debug" and "x64"
    - Click on the menu: **Build → Build Solution** (or press `Ctrl+Shift+B`)
    - Wait for the build to complete (you'll see "Build succeeded" at the bottom)
 
-5. **The application is now ready!**
+4. **The application is now ready!**
    - The compiled application is located in: `SecureVault.App\bin\x64\Debug\net8.0-windows10.0.19041.0\`
 
 ## How to Run the Application
