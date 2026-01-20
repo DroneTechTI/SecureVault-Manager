@@ -47,6 +47,12 @@ namespace SecureVault.App.Views
                     case "Generator":
                         ContentFrame.Navigate(typeof(GeneratorPage));
                         break;
+                    case "Export":
+                        ContentFrame.Navigate(typeof(ExportPage));
+                        break;
+                    case "Security":
+                        ContentFrame.Navigate(typeof(SecurityPage));
+                        break;
                 }
             }
         }
@@ -63,6 +69,26 @@ namespace SecureVault.App.Views
             else
             {
                 Frame.Navigate(typeof(AuthenticationPage));
+            }
+        }
+
+        private async void OnBackupClick(object sender, RoutedEventArgs e)
+        {
+            // Show backup dialog
+            var dialog = new ContentDialog
+            {
+                Title = "Crea Backup",
+                Content = "Vuoi creare un backup cifrato del tuo vault?\n\nIl backup sarà salvato nella cartella Documenti.",
+                PrimaryButtonText = "Crea Backup",
+                CloseButtonText = "Annulla",
+                XamlRoot = this.XamlRoot
+            };
+
+            var result = await dialog.ShowAsync();
+            if (result == ContentDialogResult.Primary)
+            {
+                // Create backup - will be implemented in ExportPage
+                ContentFrame.Navigate(typeof(SettingsPage));
             }
         }
     }

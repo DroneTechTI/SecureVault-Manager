@@ -21,14 +21,14 @@ public sealed partial class AuthenticationPage : Page
         // Check if vault exists
         if (ViewModel.VaultExists)
         {
-            TitleText.Text = "Unlock Vault";
+            TitleText.Text = "Sblocca Vault";
             UnlockPanel.Visibility = Visibility.Visible;
             CreatePanel.Visibility = Visibility.Collapsed;
             ConfirmPasswordBox.Visibility = Visibility.Collapsed;
         }
         else
         {
-            TitleText.Text = "Create Master Password";
+            TitleText.Text = "Crea Password Principale";
             UnlockPanel.Visibility = Visibility.Collapsed;
             CreatePanel.Visibility = Visibility.Visible;
             ConfirmPasswordBox.Visibility = Visibility.Visible;
@@ -61,7 +61,7 @@ public sealed partial class AuthenticationPage : Page
 
     private void OnCreateVaultClick(object sender, RoutedEventArgs e)
     {
-        TitleText.Text = "Create Master Password";
+        TitleText.Text = "Crea Password Principale";
         UnlockPanel.Visibility = Visibility.Collapsed;
         CreatePanel.Visibility = Visibility.Visible;
         ConfirmPasswordBox.Visibility = Visibility.Visible;
@@ -69,7 +69,7 @@ public sealed partial class AuthenticationPage : Page
 
     private void OnBackToUnlockClick(object sender, RoutedEventArgs e)
     {
-        TitleText.Text = "Unlock Vault";
+        TitleText.Text = "Sblocca Vault";
         UnlockPanel.Visibility = Visibility.Visible;
         CreatePanel.Visibility = Visibility.Collapsed;
         ConfirmPasswordBox.Visibility = Visibility.Collapsed;

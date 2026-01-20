@@ -1,0 +1,69 @@
+<Page
+    x:Class="SecureVault.App.Views.SecurityPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="24" Spacing="24" MaxWidth="800">
+            <TextBlock Text="Centro Sicurezza" FontSize="32" FontWeight="Bold"/>
+
+            <!-- Security Analysis -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="Analisi Sicurezza Completa" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock TextWrapping="Wrap" Text="Analizza tutte le tue password per identificare vulnerabilità e suggerimenti di sicurezza."/>
+                    <Button Content="Avvia Analisi Completa" Click="OnAnalyzeClick" Style="{StaticResource AccentButtonStyle}"/>
+                    <ProgressBar x:Name="AnalysisProgress" Visibility="Collapsed"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Compromised Check -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE7BA;" FontSize="32" Foreground="#F44336"/>
+                        <TextBlock Text="Verifica Password Compromesse" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Controlla se le tue password sono state esposte in violazioni di dati usando l'API Have I Been Pwned (con k-anonymity per la privacy)."/>
+                    <Button Content="Verifica Password Compromesse" Click="OnCheckCompromisedClick" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Password Strength -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE8D8;" FontSize="32" Foreground="#FFC107"/>
+                        <TextBlock Text="Trova Password Deboli" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Identifica password con scarsa complessità che dovrebbero essere modificate."/>
+                    <Slider x:Name="StrengthThresholdSlider" Header="Soglia forza minima" Minimum="0" Maximum="100" Value="60" StepFrequency="10"/>
+                    <TextBlock x:Name="StrengthValueText" Text="Valore: 60" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <Button Content="Trova Password Deboli" Click="OnFindWeakClick" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Duplicates -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE8C8;" FontSize="32" Foreground="#FF9800"/>
+                        <TextBlock Text="Trova Password Duplicate" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Trova password riutilizzate su più account. Ogni account dovrebbe avere una password unica."/>
+                    <Button Content="Trova Password Duplicate" Click="OnFindDuplicatesClick" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Results -->
+            <Border x:Name="ResultsPanel" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Risultati Analisi" FontSize="20" FontWeight="SemiBold"/>
+                    <ScrollViewer MaxHeight="400">
+                        <TextBlock x:Name="ResultsText" TextWrapping="Wrap"/>
+                    </ScrollViewer>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

@@ -15,17 +15,27 @@
                         <FontIcon Glyph="&#xE80F;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Credentials" Tag="Credentials">
+                <NavigationViewItem Content="Le Mie Password" Tag="Credentials">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8D7;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Import" Tag="Import">
+                <NavigationViewItem Content="Importa" Tag="Import">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE8B5;"/>
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
-                <NavigationViewItem Content="Generator" Tag="Generator">
+                <NavigationViewItem Content="Genera Password" Tag="Generator">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE72E;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Esporta" Tag="Export">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEDE1;"/>
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="Sicurezza" Tag="Security">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE72E;"/>
                     </NavigationViewItem.Icon>
@@ -33,12 +43,20 @@
             </NavigationView.MenuItems>
 
             <NavigationView.PaneFooter>
-                <Button Click="OnLockVaultClick" HorizontalAlignment="Stretch" Padding="12">
-                    <StackPanel Orientation="Horizontal" Spacing="8">
-                        <FontIcon Glyph="&#xE72E;" FontSize="16"/>
-                        <TextBlock Text="Lock Vault" VerticalAlignment="Center"/>
-                    </StackPanel>
-                </Button>
+                <StackPanel Spacing="4">
+                    <Button Click="OnLockVaultClick" HorizontalAlignment="Stretch" Padding="12">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE72E;" FontSize="16"/>
+                            <TextBlock Text="Blocca Vault" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Click="OnBackupClick" HorizontalAlignment="Stretch" Padding="12">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <FontIcon Glyph="&#xE777;" FontSize="16"/>
+                            <TextBlock Text="Crea Backup" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
             </NavigationView.PaneFooter>
 
             <Frame x:Name="ContentFrame"/>

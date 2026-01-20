@@ -1,0 +1,64 @@
+<Page
+    x:Class="SecureVault.App.Views.ExportPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <ScrollViewer>
+        <StackPanel Padding="24" Spacing="24" MaxWidth="800">
+            <StackPanel Spacing="8">
+                <TextBlock Text="Esporta Password" FontSize="32" FontWeight="Bold"/>
+                <TextBlock Text="Esporta le tue credenziali in vari formati" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+            </StackPanel>
+
+            <!-- Export CSV -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE8A5;" FontSize="32" Foreground="#4CAF50"/>
+                        <TextBlock Text="Esporta in CSV" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Esporta tutte le tue password in formato CSV. Questo file può essere importato in altri password manager."/>
+                    <ToggleSwitch x:Name="IncludePasswordsToggle" Header="Includi le password nel file" IsOn="True"/>
+                    <Button Content="Esporta in CSV" Click="OnExportCsvClick" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Export JSON -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE943;" FontSize="32" Foreground="#2196F3"/>
+                        <TextBlock Text="Esporta in JSON Cifrato" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Esporta in formato JSON con cifratura. Ideale per backup sicuri."/>
+                    <PasswordBox x:Name="ExportPasswordBox" Header="Password per cifratura (opzionale)" PlaceholderText="Lascia vuoto per nessuna cifratura"/>
+                    <Button Content="Esporta JSON Cifrato" Click="OnExportJsonClick" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Backup -->
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="16">
+                    <StackPanel Orientation="Horizontal" Spacing="12">
+                        <FontIcon Glyph="&#xE777;" FontSize="32" Foreground="#FF9800"/>
+                        <TextBlock Text="Backup Completo" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock TextWrapping="Wrap" Text="Crea un backup completo del vault cifrato. Include tutte le credenziali e le impostazioni."/>
+                    <TextBlock x:Name="BackupPathText" Text="Percorso: Documenti\SecureVault\Backups" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                    <Button Content="Crea Backup Ora" Click="OnCreateBackupClick" Style="{StaticResource AccentButtonStyle}"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Results -->
+            <Border x:Name="ResultsPanel" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <StackPanel Spacing="12">
+                    <TextBlock Text="Risultato" FontSize="20" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="ResultsText" TextWrapping="Wrap"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Warning -->
+            <InfoBar Severity="Warning" IsOpen="True" Title="⚠️ Attenzione alla Sicurezza" Message="I file esportati non sono cifrati (tranne JSON cifrato). Elimina i file dopo averli usati e non condividerli mai." IsClosable="False"/>
+        </StackPanel>
+    </ScrollViewer>
+</Page>

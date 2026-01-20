@@ -5,7 +5,7 @@
 
     <ScrollViewer>
         <StackPanel Padding="24" Spacing="24">
-            <TextBlock Text="Security Dashboard" FontSize="32" FontWeight="Bold"/>
+            <TextBlock Text="Dashboard Sicurezza" FontSize="32" FontWeight="Bold"/>
 
             <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <Grid>
@@ -23,7 +23,7 @@
                     </Grid>
 
                     <StackPanel Grid.Column="1" Spacing="16" VerticalAlignment="Center">
-                        <TextBlock Text="Password Health Overview" FontSize="20" FontWeight="SemiBold"/>
+                        <TextBlock Text="Panoramica Salute Password" FontSize="20" FontWeight="SemiBold"/>
                         <Grid>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*"/>
