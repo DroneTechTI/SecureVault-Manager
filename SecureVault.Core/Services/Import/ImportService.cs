@@ -24,30 +24,65 @@ public class ImportService : IImportService
                 return result;
             }
 
-            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            // Read all lines
+            var lines = await File.ReadAllLinesAsync(filePath);
+            
+            if (lines.Length < 2)
             {
-                HasHeaderRecord = true,
-                MissingFieldFound = null,
-                BadDataFound = null
-            };
+                result.Errors.Add("File is empty or has no data");
+                return result;
+            }
 
-            using var reader = new StreamReader(filePath);
-            using var csv = new CsvReader(reader, config);
+            // Parse header to find column indices
+            var header = lines[0].ToLowerInvariant();
+            var columns = ParseCsvLine(header);
+            
+            int nameIndex = Array.FindIndex(columns, c => c.Contains("name"));
+            int urlIndex = Array.FindIndex(columns, c => c.Contains("url"));
+            int usernameIndex = Array.FindIndex(columns, c => c.Contains("username"));
+            int passwordIndex = Array.FindIndex(columns, c => c.Contains("password"));
 
-            var records = csv.GetRecords<ChromePasswordRecord>().ToList();
-            result.TotalRecords = records.Count;
+            // Debug info
+            result.Errors.Add($"DEBUG - Header columns: {string.Join(", ", columns)}");
+            result.Errors.Add($"DEBUG - Found indices: url={urlIndex}, username={usernameIndex}, password={passwordIndex}");
 
-            foreach (var record in records)
+            result.TotalRecords = lines.Length - 1;
+
+            // Parse data rows
+            for (int i = 1; i < lines.Length; i++)
             {
                 try
                 {
+                    var line = lines[i];
+                    if (string.IsNullOrWhiteSpace(line))
+                        continue;
+
+                    var values = ParseCsvLine(line);
+                    
+                    if (values.Length < 3)
+                    {
+                        result.FailedImports++;
+                        continue;
+                    }
+
+                    var url = urlIndex >= 0 && urlIndex < values.Length ? values[urlIndex] : "";
+                    var username = usernameIndex >= 0 && usernameIndex < values.Length ? values[usernameIndex] : "";
+                    var password = passwordIndex >= 0 && passwordIndex < values.Length ? values[passwordIndex] : "";
+                    var name = nameIndex >= 0 && nameIndex < values.Length ? values[nameIndex] : "";
+
+                    if (string.IsNullOrWhiteSpace(url) && string.IsNullOrWhiteSpace(username))
+                    {
+                        result.FailedImports++;
+                        continue;
+                    }
+
                     var credential = new Credential
                     {
-                        Title = ExtractDomainFromUrl(record.Url),
-                        Username = record.Username ?? string.Empty,
-                        Password = record.Password ?? string.Empty,
-                        Url = record.Url ?? string.Empty,
-                        Domain = ExtractDomainFromUrl(record.Url),
+                        Title = !string.IsNullOrWhiteSpace(name) ? name : ExtractDomainFromUrl(url ?? string.Empty),
+                        Username = username ?? string.Empty,
+                        Password = password ?? string.Empty,
+                        Url = url ?? string.Empty,
+                        Domain = ExtractDomainFromUrl(url ?? string.Empty),
                         Source = "Chrome",
                         ImportedAt = DateTime.UtcNow,
                         CreatedAt = DateTime.UtcNow,
@@ -60,7 +95,7 @@ public class ImportService : IImportService
                 catch (Exception ex)
                 {
                     result.FailedImports++;
-                    result.Errors.Add($"Failed to import record: {ex.Message}");
+                    result.Errors.Add($"Line {i}: {ex.Message}");
                 }
             }
         }
@@ -70,6 +105,44 @@ public class ImportService : IImportService
         }
 
         return result;
+    }
+
+    private string[] ParseCsvLine(string line)
+    {
+        var result = new List<string>();
+        var current = new System.Text.StringBuilder();
+        bool inQuotes = false;
+
+        for (int i = 0; i < line.Length; i++)
+        {
+            char c = line[i];
+
+            if (c == '"')
+            {
+                if (inQuotes && i + 1 < line.Length && line[i + 1] == '"')
+                {
+                    // Escaped quote
+                    current.Append('"');
+                    i++;
+                }
+                else
+                {
+                    inQuotes = !inQuotes;
+                }
+            }
+            else if (c == ',' && !inQuotes)
+            {
+                result.Add(current.ToString().Trim());
+                current.Clear();
+            }
+            else
+            {
+                current.Append(c);
+            }
+        }
+
+        result.Add(current.ToString().Trim());
+        return result.ToArray();
     }
 
     public async Task<ImportResult> ImportFromSamsungPassAsync(string filePath)
