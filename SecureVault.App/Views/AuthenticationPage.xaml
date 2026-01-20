@@ -16,31 +16,31 @@
                 <StackPanel HorizontalAlignment="Center" Spacing="8">
                     <FontIcon Glyph="&#xE72E;" FontSize="64" Foreground="White"/>
                     <TextBlock Text="SecureVault Manager" FontSize="32" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center"/>
-                    <TextBlock Text="Your passwords, secured locally" FontSize="14" Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Le tue password, protette localmente" FontSize="14" Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
                 </StackPanel>
 
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="32" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="16">
-                        <TextBlock x:Name="TitleText" Text="Unlock Vault" FontSize="24" FontWeight="SemiBold"/>
+                        <TextBlock x:Name="TitleText" Text="Sblocca Vault" FontSize="24" FontWeight="SemiBold"/>
                         <InfoBar x:Name="ErrorBar" Severity="Error" IsOpen="False" IsClosable="True"/>
-                        <PasswordBox x:Name="MasterPasswordBox" Header="Master Password" PlaceholderText="Enter your master password" KeyDown="OnPasswordKeyDown"/>
-                        <PasswordBox x:Name="ConfirmPasswordBox" Header="Confirm Password" PlaceholderText="Confirm your master password" Visibility="Collapsed"/>
+                        <PasswordBox x:Name="MasterPasswordBox" Header="Password Principale" PlaceholderText="Inserisci la tua password principale" KeyDown="OnPasswordKeyDown"/>
+                        <PasswordBox x:Name="ConfirmPasswordBox" Header="Conferma Password" PlaceholderText="Conferma la tua password principale" Visibility="Collapsed"/>
 
                         <StackPanel x:Name="UnlockPanel" Spacing="12">
-                            <Button Content="Unlock Vault" Click="OnUnlockClick" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"/>
-                            <HyperlinkButton Content="Create new vault" Click="OnCreateVaultClick" HorizontalAlignment="Center"/>
+                            <Button Content="Sblocca Vault" Click="OnUnlockClick" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"/>
+                            <HyperlinkButton Content="Crea nuovo vault" Click="OnCreateVaultClick" HorizontalAlignment="Center"/>
                         </StackPanel>
 
                         <StackPanel x:Name="CreatePanel" Visibility="Collapsed" Spacing="12">
-                            <Button Content="Create Vault" Click="OnCreateClick" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"/>
-                            <HyperlinkButton Content="Back to unlock" Click="OnBackToUnlockClick" HorizontalAlignment="Center"/>
+                            <Button Content="Crea Vault" Click="OnCreateClick" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Stretch"/>
+                            <HyperlinkButton Content="Torna allo sblocco" Click="OnBackToUnlockClick" HorizontalAlignment="Center"/>
                         </StackPanel>
                     </StackPanel>
                 </Border>
 
                 <StackPanel HorizontalAlignment="Center" Spacing="4">
-                    <TextBlock Text="🔒 Military-grade AES-256 encryption" FontSize="12" Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
-                    <TextBlock Text="💾 All data stored locally - no cloud" FontSize="12" Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
+                    <TextBlock Text="🔒 Crittografia militare AES-256" FontSize="12" Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
+                    <TextBlock Text="💾 Tutti i dati memorizzati localmente - nessun cloud" FontSize="12" Foreground="#CCFFFFFF" HorizontalAlignment="Center"/>
                 </StackPanel>
             </StackPanel>
         </Grid>
