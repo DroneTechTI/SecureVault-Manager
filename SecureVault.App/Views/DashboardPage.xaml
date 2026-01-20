@@ -30,11 +30,11 @@
                     <Grid Grid.Column="0" Margin="0,0,32,0">
                         <Ellipse Width="120" Height="120" Fill="{ThemeResource AccentFillColorDefaultBrush}" Opacity="0.1"/>
                         <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-                            <TextBlock Text="{x:Bind ViewModel.SecurityScore.OverallScore, Mode=OneWay}" 
+                            <TextBlock x:Name="ScoreText" Text="100" 
                                        FontSize="48" 
                                        FontWeight="Bold"
                                        HorizontalAlignment="Center"/>
-                            <TextBlock Text="{x:Bind ViewModel.ScoreLevel, Mode=OneWay}" 
+                            <TextBlock x:Name="ScoreLevelText" Text="Excellent" 
                                        FontSize="14" 
                                        HorizontalAlignment="Center"
                                        Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
@@ -59,7 +59,7 @@
 
                             <!-- Total Credentials -->
                             <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
-                                <TextBlock Text="{x:Bind ViewModel.TotalCredentials, Mode=OneWay}" 
+                                <TextBlock x:Name="TotalCredentialsText" Text="0" 
                                            FontSize="24" 
                                            FontWeight="Bold"/>
                                 <TextBlock Text="Total Credentials" 
@@ -69,7 +69,7 @@
 
                             <!-- Strong Passwords -->
                             <StackPanel Grid.Row="0" Grid.Column="1" Spacing="4">
-                                <TextBlock Text="{x:Bind ViewModel.StrongPasswords, Mode=OneWay}" 
+                                <TextBlock x:Name="StrongPasswordsText" Text="0" 
                                            FontSize="24" 
                                            FontWeight="Bold"
                                            Foreground="#4CAF50"/>
@@ -80,7 +80,7 @@
 
                             <!-- Weak Passwords -->
                             <StackPanel Grid.Row="1" Grid.Column="0" Spacing="4" Margin="0,16,0,0">
-                                <TextBlock Text="{x:Bind ViewModel.WeakPasswords, Mode=OneWay}" 
+                                <TextBlock x:Name="WeakPasswordsText" Text="0" 
                                            FontSize="24" 
                                            FontWeight="Bold"
                                            Foreground="#FFC107"/>
@@ -91,7 +91,7 @@
 
                             <!-- Compromised -->
                             <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4" Margin="0,16,0,0">
-                                <TextBlock Text="{x:Bind ViewModel.CompromisedPasswords, Mode=OneWay}" 
+                                <TextBlock x:Name="CompromisedPasswordsText" Text="0" 
                                            FontSize="24" 
                                            FontWeight="Bold"
                                            Foreground="#F44336"/>
@@ -137,8 +137,8 @@
             </Grid>
 
             <!-- Loading Indicator -->
-            <ProgressRing IsActive="{x:Bind ViewModel.IsLoading, Mode=OneWay}" 
-                          Visibility="{x:Bind ViewModel.IsLoading, Mode=OneWay}"
+            <ProgressRing x:Name="LoadingRing" IsActive="False" 
+                          Visibility="Collapsed"
                           Width="50" 
                           Height="50"
                           HorizontalAlignment="Center"/>
