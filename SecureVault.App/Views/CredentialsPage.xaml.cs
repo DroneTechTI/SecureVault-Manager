@@ -240,4 +240,28 @@ public sealed partial class CredentialsPage : Page
             ViewModel.CreateGroups();
         }
     }
+
+    private void OnToggleFavorite(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var vm = button?.Tag as CredentialItemViewModel;
+        if (vm != null)
+        {
+            _ = vm.ToggleFavoriteCommand.ExecuteAsync(null);
+        }
+    }
+
+    private void OnFilterFavorites(object sender, RoutedEventArgs e)
+    {
+        ViewModel.Credentials.Clear();
+        foreach (var cred in _allCredentials.Where(c => c.IsFavorite))
+        {
+            ViewModel.Credentials.Add(cred);
+        }
+        
+        if (ViewModel.IsGroupedView)
+        {
+            ViewModel.CreateGroups();
+        }
+    }
 }

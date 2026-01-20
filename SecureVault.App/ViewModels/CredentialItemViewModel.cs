@@ -71,6 +71,9 @@ public partial class CredentialItemViewModel : ObservableObject
     [ObservableProperty]
     private bool _isPasswordVisible;
 
+    [ObservableProperty]
+    private bool _isFavorite;
+
     public CredentialItemViewModel(
         Credential credential,
         PasswordAnalysisResult? analysis,
@@ -82,6 +85,7 @@ public partial class CredentialItemViewModel : ObservableObject
         _vaultService = vaultService;
         _generatorService = generatorService;
         _localization = App.Services.GetRequiredService<LocalizationService>();
+        _isFavorite = credential.IsFavorite;
 
         if (analysis != null)
         {
@@ -146,6 +150,25 @@ public partial class CredentialItemViewModel : ObservableObject
     private void TogglePasswordVisibility()
     {
         IsPasswordVisible = !IsPasswordVisible;
+    }
+
+    [RelayCommand]
+    private async Task ToggleFavoriteAsync()
+    {
+        IsFavorite = !IsFavorite;
+        _credential.IsFavorite = IsFavorite;
+        
+        try
+        {
+            await _vaultService.UpdateCredentialAsync(_credential);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"Error updating favorite status: {ex.Message}");
+            // Revert on error
+            IsFavorite = !IsFavorite;
+            _credential.IsFavorite = IsFavorite;
+        }
     }
 
     private void UpdateStatus()
