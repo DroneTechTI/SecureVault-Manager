@@ -13,12 +13,16 @@ public sealed partial class CredentialsPage : Page
 {
     public CredentialsViewModel ViewModel { get; }
     private readonly IVaultService _vaultService;
+    private List<CredentialItemViewModel> _allCredentials = new();
 
     public CredentialsPage()
     {
         this.InitializeComponent();
         ViewModel = App.Services.GetRequiredService<CredentialsViewModel>();
         _vaultService = App.Services.GetRequiredService<IVaultService>();
+        
+        // Add search functionality
+        SearchBox.TextChanged += OnSearchTextChanged;
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -44,6 +48,7 @@ public sealed partial class CredentialsPage : Page
                     var vm = new CredentialItemViewModel(cred, null, _vaultService, 
                         App.Services.GetRequiredService<IPasswordGeneratorService>());
                     ViewModel.Credentials.Add(vm);
+                    _allCredentials.Add(vm);
                 }
                 
                 CredentialsList.ItemsSource = ViewModel.Credentials;
@@ -68,6 +73,7 @@ public sealed partial class CredentialsPage : Page
                                     var vm = new CredentialItemViewModel(cred, null, _vaultService,
                                         App.Services.GetRequiredService<IPasswordGeneratorService>());
                                     ViewModel.Credentials.Add(vm);
+                                    _allCredentials.Add(vm);
                                 }
                             });
                             
@@ -197,5 +203,41 @@ public sealed partial class CredentialsPage : Page
     private void OnToggleGroupView(object sender, RoutedEventArgs e)
     {
         ViewModel.ToggleGroupViewCommand.Execute(null);
+    }
+
+    private void OnSearchTextChanged(object sender, TextChangedEventArgs e)
+    {
+        var searchText = SearchBox.Text.ToLower().Trim();
+        
+        if (string.IsNullOrWhiteSpace(searchText))
+        {
+            // Show all credentials
+            ViewModel.Credentials.Clear();
+            foreach (var cred in _allCredentials)
+            {
+                ViewModel.Credentials.Add(cred);
+            }
+        }
+        else
+        {
+            // Filter credentials
+            var filtered = _allCredentials.Where(c =>
+                c.Title.ToLower().Contains(searchText) ||
+                c.Username.ToLower().Contains(searchText) ||
+                (!string.IsNullOrEmpty(c.Domain) && c.Domain.ToLower().Contains(searchText))
+            ).ToList();
+            
+            ViewModel.Credentials.Clear();
+            foreach (var cred in filtered)
+            {
+                ViewModel.Credentials.Add(cred);
+            }
+        }
+        
+        // Update grouped view if active
+        if (ViewModel.IsGroupedView)
+        {
+            ViewModel.CreateGroups();
+        }
     }
 }

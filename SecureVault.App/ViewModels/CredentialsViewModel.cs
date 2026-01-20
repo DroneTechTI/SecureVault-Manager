@@ -150,7 +150,7 @@ public partial class CredentialsViewModel : ObservableObject
         }
     }
 
-    private void CreateGroups()
+    public void CreateGroups()
     {
         GroupedCredentials.Clear();
 
