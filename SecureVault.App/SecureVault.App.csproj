@@ -7,8 +7,9 @@
 
         <!-- WinUI 3 -->
         <UseWinUI>true</UseWinUI>
-        <EnableMsixTooling>true</EnableMsixTooling>
+        <EnableMsixTooling>false</EnableMsixTooling>
         <WindowsPackageType>None</WindowsPackageType>
+        <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
         <!-- Project Options -->
         <Nullable>enable</Nullable>
