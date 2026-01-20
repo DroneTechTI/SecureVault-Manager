@@ -183,4 +183,14 @@ public sealed partial class CredentialsPage : Page
             ViewModel.Credentials.Remove(vm);
         }
     }
+
+    private void OnTogglePasswordVisibility(object sender, RoutedEventArgs e)
+    {
+        var button = sender as Button;
+        var vm = button?.Tag as CredentialItemViewModel;
+        if (vm != null)
+        {
+            vm.TogglePasswordVisibilityCommand.Execute(null);
+        }
+    }
 }

@@ -16,6 +16,8 @@
             </ResourceDictionary.MergedDictionaries>
             <!-- Converters -->
             <converters:BoolNegationConverter x:Key="BoolNegationConverter"/>
+            <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <converters:BoolNegationToVisibilityConverter x:Key="BoolNegationToVisibilityConverter"/>
             
             <!-- Other app resources here -->
             <Color x:Key="Primary">#512BD4</Color>

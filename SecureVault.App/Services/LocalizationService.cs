@@ -72,14 +72,10 @@ public class LocalizationService
             "Password Health Overview" => "Panoramica Salute Password",
             "Total Credentials" => "Credenziali Totali",
             "Strong Passwords" => "Password Forti",
-            "Weak Passwords" => "Password Deboli",
-            "Compromised" => "Compromesse",
             
             // Credentials
             "Search credentials..." => "Cerca credenziali...",
             "All" => "Tutte",
-            "Weak" => "Deboli",
-            "Duplicate" => "Duplicate",
             
             // Generator
             "Click Generate to create a password" => "Clicca Genera per creare una password",
@@ -123,6 +119,14 @@ public class LocalizationService
             "About" => "Informazioni",
             "Save Settings" => "Salva Impostazioni",
             "Version" => "Versione",
+            
+            // Password Status (singular and plural)
+            "Strong" => "Forte",
+            "Weak" => "Debole",
+            "Duplicate" => "Duplicata",
+            "Compromised" => "Compromessa",
+            "Weak Passwords" => "Password Deboli",
+            "Duplicate Passwords" => "Password Duplicate",
             
             // Common
             "Close" => "Chiudi",

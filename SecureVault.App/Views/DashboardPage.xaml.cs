@@ -13,6 +13,7 @@ public sealed partial class DashboardPage : Page
     {
         this.InitializeComponent();
         ViewModel = App.Services.GetRequiredService<DashboardViewModel>();
+        ViewModel.SetDispatcherQueue(DispatcherQueue);
     }
 
     protected override async void OnNavigatedTo(NavigationEventArgs e)
