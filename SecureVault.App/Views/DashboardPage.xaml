@@ -36,22 +36,22 @@
 
                             <StackPanel Grid.Row="0" Grid.Column="0" Spacing="4">
                                 <TextBlock x:Name="TotalCredentialsText" Text="0" FontSize="24" FontWeight="Bold"/>
-                                <TextBlock Text="Total Credentials" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="Credenziali Totali" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel Grid.Row="0" Grid.Column="1" Spacing="4">
                                 <TextBlock x:Name="StrongPasswordsText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#4CAF50"/>
-                                <TextBlock Text="Strong Passwords" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="Password Forti" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel Grid.Row="1" Grid.Column="0" Spacing="4" Margin="0,16,0,0">
                                 <TextBlock x:Name="WeakPasswordsText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#FFC107"/>
-                                <TextBlock Text="Weak Passwords" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="Password Deboli" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
 
                             <StackPanel Grid.Row="1" Grid.Column="1" Spacing="4" Margin="0,16,0,0">
                                 <TextBlock x:Name="CompromisedPasswordsText" Text="0" FontSize="24" FontWeight="Bold" Foreground="#F44336"/>
-                                <TextBlock Text="Compromised" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                                <TextBlock Text="Compromesse" FontSize="12" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                             </StackPanel>
                         </Grid>
                     </StackPanel>
