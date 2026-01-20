@@ -48,21 +48,19 @@
                         <!-- Error Message -->
                         <InfoBar x:Name="ErrorBar"
                                  Severity="Error"
-                                 IsOpen="{x:Bind ViewModel.HasError, Mode=OneWay}"
-                                 Message="{x:Bind ViewModel.ErrorMessage, Mode=OneWay}"
+                                 IsOpen="False"
+                                 Message=""
                                  IsClosable="True"/>
 
                         <!-- Master Password -->
                         <PasswordBox x:Name="MasterPasswordBox"
                                      Header="Master Password"
-                                     Password="{x:Bind ViewModel.MasterPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      PlaceholderText="Enter your master password"
                                      KeyDown="OnPasswordKeyDown"/>
 
                         <!-- Confirm Password (only for creation) -->
                         <PasswordBox x:Name="ConfirmPasswordBox"
                                      Header="Confirm Password"
-                                     Password="{x:Bind ViewModel.ConfirmPassword, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                      PlaceholderText="Confirm your master password"
                                      Visibility="Collapsed"/>
 
@@ -75,10 +73,9 @@
                         <!-- Action Buttons -->
                         <StackPanel x:Name="UnlockPanel" Spacing="12">
                             <Button Content="Unlock Vault"
-                                    Command="{x:Bind ViewModel.UnlockVaultCommand}"
+                                    Click="OnUnlockClick"
                                     Style="{StaticResource AccentButtonStyle}"
-                                    HorizontalAlignment="Stretch"
-                                    IsEnabled="{x:Bind ViewModel.IsUnlocking, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"/>
+                                    HorizontalAlignment="Stretch"/>
                             
                             <HyperlinkButton Content="Create new vault" 
                                            Click="OnCreateVaultClick"
@@ -87,10 +84,9 @@
 
                         <StackPanel x:Name="CreatePanel" Visibility="Collapsed" Spacing="12">
                             <Button Content="Create Vault"
-                                    Command="{x:Bind ViewModel.CreateVaultCommand}"
+                                    Click="OnCreateClick"
                                     Style="{StaticResource AccentButtonStyle}"
-                                    HorizontalAlignment="Stretch"
-                                    IsEnabled="{x:Bind ViewModel.IsCreatingVault, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"/>
+                                    HorizontalAlignment="Stretch"/>
                             
                             <HyperlinkButton Content="Back to unlock" 
                                            Click="OnBackToUnlockClick"

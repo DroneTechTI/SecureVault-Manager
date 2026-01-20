@@ -24,23 +24,22 @@
                     <StackPanel Spacing="16">
                         <StackPanel Spacing="8">
                             <TextBlock Text="Auto-lock timeout (minutes)"/>
-                            <NumberBox Value="{x:Bind ViewModel.AutoLockMinutes, Mode=TwoWay}" 
+                            <NumberBox x:Name="AutoLockMinutesBox" Value="5" 
                                        Minimum="1" 
                                        Maximum="60"/>
                         </StackPanel>
 
                         <StackPanel Spacing="8">
                             <TextBlock Text="Clipboard clear timeout (seconds)"/>
-                            <NumberBox Value="{x:Bind ViewModel.ClipboardClearSeconds, Mode=TwoWay}" 
+                            <NumberBox x:Name="ClipboardClearSecondsBox" Value="30" 
                                        Minimum="5" 
                                        Maximum="300"/>
                         </StackPanel>
 
-                        <ToggleSwitch Header="Check for compromised passwords"
-                                      IsOn="{x:Bind ViewModel.CheckForCompromisedPasswords, Mode=TwoWay}"/>
+                        <ToggleSwitch x:Name="CheckCompromisedToggle" Header="Check for compromised passwords"
+                                      IsOn="True"/>
 
                         <Button Content="Change Master Password"
-                                Command="{x:Bind ViewModel.ChangeMasterPasswordCommand}"
                                 Style="{StaticResource AccentButtonStyle}"/>
                     </StackPanel>
                 </Border>
@@ -56,14 +55,12 @@
                         BorderThickness="1"
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="16">
-                        <ToggleSwitch Header="Enable automatic backups"
-                                      IsOn="{x:Bind ViewModel.EnableAutoBackup, Mode=TwoWay}"/>
+                        <ToggleSwitch x:Name="EnableAutoBackupToggle" Header="Enable automatic backups"
+                                      IsOn="True"/>
 
-                        <Button Content="Create Backup Now"
-                                Command="{x:Bind ViewModel.CreateBackupCommand}"/>
+                        <Button Content="Create Backup Now"/>
 
-                        <Button Content="Export Credentials"
-                                Command="{x:Bind ViewModel.ExportCredentialsCommand}"/>
+                        <Button Content="Export Credentials"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
@@ -79,7 +76,7 @@
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="8">
                         <TextBlock Text="Theme"/>
-                        <RadioButtons SelectedItem="{x:Bind ViewModel.ThemeMode, Mode=TwoWay}">
+                        <RadioButtons x:Name="ThemeModeSelector">
                             <RadioButton Content="System Default" Tag="System"/>
                             <RadioButton Content="Light" Tag="Light"/>
                             <RadioButton Content="Dark" Tag="Dark"/>
@@ -99,7 +96,7 @@
                         BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="8">
                         <TextBlock Text="SecureVault Manager" FontWeight="SemiBold"/>
-                        <TextBlock Text="{x:Bind ViewModel.AppVersion, Mode=OneWay}" 
+                        <TextBlock Text="1.0.0" 
                                    Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                         <TextBlock Text="A professional password manager with military-grade encryption" 
                                    TextWrapping="Wrap"
@@ -110,7 +107,6 @@
 
             <!-- Save Button -->
             <Button Content="Save Settings"
-                    Command="{x:Bind ViewModel.SaveSettingsCommand}"
                     Style="{StaticResource AccentButtonStyle}"
                     HorizontalAlignment="Right"/>
         </StackPanel>
