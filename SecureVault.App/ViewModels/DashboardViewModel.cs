@@ -98,7 +98,10 @@ public partial class DashboardViewModel : ObservableObject
                 {
                     try
                     {
+                        System.Diagnostics.Debug.WriteLine("DashboardViewModel: Starting full analysis with HIBP check...");
                         var fullScore = await _analysisService.CalculateSecurityScoreAsync(credentials);
+                        
+                        System.Diagnostics.Debug.WriteLine($"DashboardViewModel: Full analysis complete - Compromised: {fullScore.CompromisedPasswords}");
                         
                         // Update on UI thread
                         if (_dispatcherQueue != null)
@@ -112,11 +115,14 @@ public partial class DashboardViewModel : ObservableObject
                                 StrongPasswords = fullScore.StrongPasswords;
                                 ScoreLevel = fullScore.GetScoreLevel();
                                 ScoreColor = fullScore.GetScoreColor();
+                                
+                                System.Diagnostics.Debug.WriteLine($"DashboardViewModel: UI updated with CompromisedPasswords = {CompromisedPasswords}");
                             });
                         }
                         else
                         {
                             // Fallback if DispatcherQueue not set
+                            System.Diagnostics.Debug.WriteLine("DashboardViewModel: WARNING - DispatcherQueue is null, using fallback");
                             SecurityScore = fullScore;
                             WeakPasswords = fullScore.WeakPasswords;
                             DuplicatePasswords = fullScore.DuplicatePasswords;
@@ -128,7 +134,8 @@ public partial class DashboardViewModel : ObservableObject
                     }
                     catch (Exception ex)
                     {
-                        System.Diagnostics.Debug.WriteLine($"Error in full analysis: {ex.Message}");
+                        System.Diagnostics.Debug.WriteLine($"DashboardViewModel: Error in full analysis: {ex.Message}");
+                        System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
                     }
                 });
             }
