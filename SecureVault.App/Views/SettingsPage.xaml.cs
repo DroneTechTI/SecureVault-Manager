@@ -30,6 +30,7 @@ public sealed partial class SettingsPage : Page
     }
 
     private bool _isLoadingLanguage = false;
+    private bool _isLoadingTheme = false;
 
     private void OnPageLoaded(object sender, RoutedEventArgs e)
     {
@@ -60,6 +61,32 @@ public sealed partial class SettingsPage : Page
         finally
         {
             _isLoadingLanguage = false;
+        }
+        
+        // Load current theme
+        try
+        {
+            _isLoadingTheme = true;
+            var currentTheme = App.Current.RequestedTheme;
+            string themeTag = currentTheme == ApplicationTheme.Dark ? "Dark" : 
+                             currentTheme == ApplicationTheme.Light ? "Light" : "Default";
+            
+            foreach (var item in ThemeSelector.Items)
+            {
+                if (item is RadioButton radio && radio.Tag?.ToString() == themeTag)
+                {
+                    radio.IsChecked = true;
+                    break;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"OnPageLoaded theme error: {ex.Message}");
+        }
+        finally
+        {
+            _isLoadingTheme = false;
         }
     }
 
@@ -99,6 +126,54 @@ public sealed partial class SettingsPage : Page
         {
             System.Diagnostics.Debug.WriteLine($"OnLanguageRadioChecked error: {ex.Message}");
             System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+        }
+    }
+
+    private async void OnThemeChanged(object sender, SelectionChangedEventArgs e)
+    {
+        try
+        {
+            if (_isLoadingTheme) return;
+            
+            if (ThemeSelector.SelectedItem is RadioButton radio)
+            {
+                var themeTag = radio.Tag?.ToString();
+                
+                ElementTheme newTheme = themeTag switch
+                {
+                    "Light" => ElementTheme.Light,
+                    "Dark" => ElementTheme.Dark,
+                    _ => ElementTheme.Default
+                };
+                
+                // Apply to main window
+                if (App.MainWindow.Content is FrameworkElement rootElement)
+                {
+                    rootElement.RequestedTheme = newTheme;
+                }
+                
+                // Save preference
+                var localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+                localSettings.Values["AppTheme"] = themeTag;
+                
+                var message = _localization.CurrentLanguage == "it" 
+                    ? $"Tema cambiato in: {radio.Content}"
+                    : $"Theme changed to: {radio.Content}";
+                
+                var dialog = new ContentDialog
+                {
+                    Title = _localization.CurrentLanguage == "it" ? "Tema Cambiato" : "Theme Changed",
+                    Content = message,
+                    CloseButtonText = "OK",
+                    XamlRoot = this.XamlRoot
+                };
+                
+                await dialog.ShowAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"OnThemeChanged error: {ex.Message}");
         }
     }
 }

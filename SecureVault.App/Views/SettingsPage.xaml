@@ -37,6 +37,20 @@
             </StackPanel>
 
             <StackPanel Spacing="16">
+                <TextBlock Text="Aspetto / Appearance" FontSize="20" FontWeight="SemiBold"/>
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                    <StackPanel Spacing="12">
+                        <TextBlock Text="Tema / Theme"/>
+                        <RadioButtons x:Name="ThemeSelector" SelectionChanged="OnThemeChanged">
+                            <RadioButton Content="☀️ Chiaro / Light" Tag="Light"/>
+                            <RadioButton Content="🌙 Scuro / Dark" Tag="Dark"/>
+                            <RadioButton Content="⚙️ Sistema / System" Tag="Default" IsChecked="True"/>
+                        </RadioButtons>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+
+            <StackPanel Spacing="16">
                 <TextBlock Text="Lingua / Language" FontSize="20" FontWeight="SemiBold"/>
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="12">
