@@ -30,6 +30,12 @@ public partial class CredentialsViewModel : ObservableObject
     [ObservableProperty]
     private string _filterMode = "All"; // All, Weak, Duplicate, Compromised
 
+    [ObservableProperty]
+    private bool _isGroupedView = false;
+
+    [ObservableProperty]
+    private ObservableCollection<CredentialGroup> _groupedCredentials = new();
+
     public CredentialsViewModel(
         IVaultService vaultService,
         IPasswordAnalysisService analysisService,
@@ -132,4 +138,42 @@ public partial class CredentialsViewModel : ObservableObject
         await _vaultService.DeleteCredentialAsync(credential.Id);
         Credentials.Remove(credential);
     }
+
+    [RelayCommand]
+    private void ToggleGroupView()
+    {
+        IsGroupedView = !IsGroupedView;
+        
+        if (IsGroupedView)
+        {
+            CreateGroups();
+        }
+    }
+
+    private void CreateGroups()
+    {
+        GroupedCredentials.Clear();
+
+        // Group by domain
+        var groups = Credentials
+            .GroupBy(c => string.IsNullOrEmpty(c.Domain) ? "Altri" : c.Domain)
+            .OrderBy(g => g.Key);
+
+        foreach (var group in groups)
+        {
+            var credGroup = new CredentialGroup
+            {
+                Domain = group.Key,
+                Credentials = new ObservableCollection<CredentialItemViewModel>(group)
+            };
+            GroupedCredentials.Add(credGroup);
+        }
+    }
+}
+
+public class CredentialGroup
+{
+    public string Domain { get; set; } = string.Empty;
+    public ObservableCollection<CredentialItemViewModel> Credentials { get; set; } = new();
+    public int Count => Credentials.Count;
 }

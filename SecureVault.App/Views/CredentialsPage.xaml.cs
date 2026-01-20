@@ -193,4 +193,9 @@ public sealed partial class CredentialsPage : Page
             vm.TogglePasswordVisibilityCommand.Execute(null);
         }
     }
+
+    private void OnToggleGroupView(object sender, RoutedEventArgs e)
+    {
+        ViewModel.ToggleGroupViewCommand.Execute(null);
+    }
 }
