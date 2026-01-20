@@ -42,6 +42,9 @@ public static class ServiceCollectionExtensions
                 sp.GetRequiredService<IEncryptionService>(),
                 sp.GetRequiredService<IVaultService>()));
 
+        // Application Services
+        services.AddSingleton<LocalizationService>();
+
         // ViewModels
         services.AddTransient<AuthenticationViewModel>();
         services.AddSingleton<MainViewModel>();
