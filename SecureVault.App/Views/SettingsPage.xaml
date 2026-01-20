@@ -5,49 +5,49 @@
 
     <ScrollViewer>
         <StackPanel Padding="24" Spacing="24" MaxWidth="800">
-            <TextBlock Text="Settings" FontSize="32" FontWeight="Bold"/>
+            <TextBlock Text="Impostazioni" FontSize="32" FontWeight="Bold"/>
 
             <StackPanel Spacing="16">
-                <TextBlock Text="Security" FontSize="20" FontWeight="SemiBold"/>
+                <TextBlock Text="Sicurezza" FontSize="20" FontWeight="SemiBold"/>
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="16">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Auto-lock timeout (minutes)"/>
+                            <TextBlock Text="Blocco automatico dopo (minuti)"/>
                             <NumberBox x:Name="AutoLockMinutesBox" Value="5" Minimum="1" Maximum="60"/>
                         </StackPanel>
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Clipboard clear timeout (seconds)"/>
+                            <TextBlock Text="Cancella appunti dopo (secondi)"/>
                             <NumberBox x:Name="ClipboardClearSecondsBox" Value="30" Minimum="5" Maximum="300"/>
                         </StackPanel>
-                        <ToggleSwitch x:Name="CheckCompromisedToggle" Header="Check for compromised passwords" IsOn="True"/>
-                        <Button Content="Change Master Password" Style="{StaticResource AccentButtonStyle}"/>
+                        <ToggleSwitch x:Name="CheckCompromisedToggle" Header="Verifica password compromesse" IsOn="True"/>
+                        <Button Content="Cambia Password Principale" Style="{StaticResource AccentButtonStyle}"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
 
             <StackPanel Spacing="16">
-                <TextBlock Text="Backup and Export" FontSize="20" FontWeight="SemiBold"/>
+                <TextBlock Text="Backup ed Esportazione" FontSize="20" FontWeight="SemiBold"/>
                 <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="16">
-                        <ToggleSwitch x:Name="EnableAutoBackupToggle" Header="Enable automatic backups" IsOn="True"/>
-                        <Button Content="Create Backup Now"/>
-                        <Button Content="Export Credentials"/>
+                        <ToggleSwitch x:Name="EnableAutoBackupToggle" Header="Abilita backup automatici" IsOn="True"/>
+                        <Button Content="Crea Backup Ora"/>
+                        <Button Content="Esporta Credenziali"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
 
             <StackPanel Spacing="16">
-                <TextBlock Text="About" FontSize="20" FontWeight="SemiBold"/>
-                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                <TextBlock Text="Informazioni" FontSize="20" FontWeight="SemiBold"/>
+                <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="16" BorderThickness="1" BorderBrash="{ThemeResource CardStrokeColorDefaultBrush}">
                     <StackPanel Spacing="8">
                         <TextBlock Text="SecureVault Manager" FontWeight="SemiBold"/>
-                        <TextBlock Text="Version 1.0.0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
-                        <TextBlock Text="A professional password manager with military-grade encryption" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="Versione 1.0.0" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                        <TextBlock Text="Un gestore di password professionale con crittografia di livello militare" TextWrapping="Wrap" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
                     </StackPanel>
                 </Border>
             </StackPanel>
 
-            <Button Content="Save Settings" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right"/>
+            <Button Content="Salva Impostazioni" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Right"/>
         </StackPanel>
     </ScrollViewer>
 </Page>
