@@ -21,6 +21,10 @@ public sealed partial class CredentialsPage : Page
     {
         base.OnNavigatedTo(e);
         await ViewModel.LoadCredentialsCommand.ExecuteAsync(null);
+        
+        // Bind credentials to ListView
+        CredentialsList.ItemsSource = ViewModel.Credentials;
+        LoadingRing.IsActive = ViewModel.IsLoading;
     }
 
     private async void OnSearchKeyPressed(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)

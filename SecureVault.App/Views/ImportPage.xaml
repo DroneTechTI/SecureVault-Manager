@@ -1,88 +1,38 @@
-<?xml version="1.0" encoding="utf-8"?>
 <Page
     x:Class="SecureVault.App.Views.ImportPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <ScrollViewer>
         <StackPanel Padding="24" Spacing="24" MaxWidth="800">
-            <!-- Header -->
             <StackPanel Spacing="8">
                 <TextBlock Text="Import Passwords" FontSize="32" FontWeight="Bold"/>
-                <TextBlock Text="Import your existing passwords from Chrome or Samsung Pass" 
-                           FontSize="14"
-                           Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
+                <TextBlock Text="Import your existing passwords from Chrome or Samsung Pass" FontSize="14" Foreground="{ThemeResource TextFillColorSecondaryBrush}"/>
             </StackPanel>
 
-            <!-- Chrome Import -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="8"
-                    Padding="24"
-                    BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="16">
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <FontIcon Glyph="&#xE774;" FontSize="32" Foreground="#4285F4"/>
-                        <TextBlock Text="Google Chrome" 
-                                   FontSize="20" 
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="Google Chrome" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
-
-                    <TextBlock TextWrapping="Wrap">
-                        <Run Text="To export from Chrome:"/>
-                        <LineBreak/>
-                        <Run Text="1. Open Chrome and go to Settings → Passwords"/>
-                        <LineBreak/>
-                        <Run Text="2. Click the three dots menu → Export passwords"/>
-                        <LineBreak/>
-                        <Run Text="3. Save the CSV file and select it below"/>
-                    </TextBlock>
-
+                    <TextBlock TextWrapping="Wrap" Text="To export from Chrome: Open Chrome → Settings → Passwords → Export passwords → Save CSV file"/>
                     <Button Content="Select Chrome CSV File" Click="OnImportChromeClick" Style="{StaticResource AccentButtonStyle}"/>
                 </StackPanel>
             </Border>
 
-            <!-- Samsung Pass Import -->
-            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="8"
-                    Padding="24"
-                    BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="16">
                     <StackPanel Orientation="Horizontal" Spacing="12">
                         <FontIcon Glyph="&#xE8EA;" FontSize="32" Foreground="#1428A0"/>
-                        <TextBlock Text="Samsung Pass" 
-                                   FontSize="20" 
-                                   FontWeight="SemiBold"
-                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="Samsung Pass" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center"/>
                     </StackPanel>
-
-                    <TextBlock TextWrapping="Wrap">
-                        <Run Text="To export from Samsung Pass:"/>
-                        <LineBreak/>
-                        <Run Text="1. Open Samsung Pass app"/>
-                        <LineBreak/>
-                        <Run Text="2. Go to Settings → Export data"/>
-                        <LineBreak/>
-                        <Run Text="3. Save the file (CSV or JSON) and select it below"/>
-                    </TextBlock>
-
+                    <TextBlock TextWrapping="Wrap" Text="To export from Samsung Pass: Open Samsung Pass app → Settings → Export data → Save file"/>
                     <Button Content="Select Samsung Pass File" Click="OnImportSamsungClick" Style="{StaticResource AccentButtonStyle}"/>
                 </StackPanel>
             </Border>
 
-            <!-- Import Results -->
-            <Border x:Name="ResultsPanel"
-                    Visibility="Collapsed"
-                    Background="{ThemeResource CardBackgroundFillColorDefaultBrush}"
-                    CornerRadius="8"
-                    Padding="24"
-                    BorderThickness="1"
-                    BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+            <Border x:Name="ResultsPanel" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="8" Padding="24" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
                 <StackPanel Spacing="12">
                     <TextBlock Text="Import Results" FontSize="20" FontWeight="SemiBold"/>
                     <TextBlock x:Name="ResultsText" TextWrapping="Wrap"/>
