@@ -29,66 +29,108 @@ public sealed partial class CredentialsPage : Page
     {
         base.OnNavigatedTo(e);
         
-        LoadingRing.IsActive = true;
-        CredentialsList.ItemsSource = null;
-        
         try
         {
+            LoadingRing.IsActive = true;
+            CredentialsList.ItemsSource = null;
+            
+            // Clear previous data
+            ViewModel.Credentials.Clear();
+            _allCredentials.Clear();
+            
+            System.Diagnostics.Debug.WriteLine("CredentialsPage: Loading credentials...");
+            
             // Load credentials in batches for better performance
             var credentials = await _vaultService.GetAllCredentialsAsync();
             
+            System.Diagnostics.Debug.WriteLine($"CredentialsPage: Loaded {credentials.Count} credentials");
+            
             DispatcherQueue.TryEnqueue(() =>
             {
-                ViewModel.Credentials.Clear();
-                
-                // Show first 50 immediately (smaller batch for faster initial load)
-                var firstBatch = credentials.Take(50).ToList();
-                foreach (var cred in firstBatch)
+                try
                 {
-                    var vm = new CredentialItemViewModel(cred, null, _vaultService, 
-                        App.Services.GetRequiredService<IPasswordGeneratorService>());
-                    ViewModel.Credentials.Add(vm);
-                    _allCredentials.Add(vm);
-                }
-                
-                CredentialsList.ItemsSource = ViewModel.Credentials;
-                LoadingRing.IsActive = false;
-                
-                // Load remaining in background with larger batches
-                if (credentials.Count > 50)
-                {
-                    _ = Task.Run(() =>
+                    // Show first 50 immediately (smaller batch for faster initial load)
+                    var firstBatch = credentials.Take(50).ToList();
+                    System.Diagnostics.Debug.WriteLine($"CredentialsPage: Adding first batch of {firstBatch.Count} items");
+                    
+                    foreach (var cred in firstBatch)
                     {
-                        var remaining = credentials.Skip(50).ToList();
-                        var batchSize = 100;
-                        
-                        for (int i = 0; i < remaining.Count; i += batchSize)
-                        {
-                            var batch = remaining.Skip(i).Take(batchSize).ToList();
-                            
-                            DispatcherQueue.TryEnqueue(() =>
-                            {
-                                foreach (var cred in batch)
-                                {
-                                    var vm = new CredentialItemViewModel(cred, null, _vaultService,
-                                        App.Services.GetRequiredService<IPasswordGeneratorService>());
-                                    ViewModel.Credentials.Add(vm);
-                                    _allCredentials.Add(vm);
-                                }
-                            });
-                            
-                            // Small delay between batches to keep UI responsive
-                            if (i + batchSize < remaining.Count)
-                                Task.Delay(5).Wait();
-                        }
-                    });
+                        var vm = new CredentialItemViewModel(cred, null, _vaultService, 
+                            App.Services.GetRequiredService<IPasswordGeneratorService>());
+                        ViewModel.Credentials.Add(vm);
+                        _allCredentials.Add(vm);
+                    }
+                    
+                    CredentialsList.ItemsSource = ViewModel.Credentials;
+                    LoadingRing.IsActive = false;
+                    
+                    System.Diagnostics.Debug.WriteLine("CredentialsPage: First batch loaded successfully");
                 }
-            });
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"CredentialsPage UI Error: {ex.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+                    LoadingRing.IsActive = false;
+                }
+                
+                    // Load remaining in background with larger batches
+                    if (credentials.Count > 50)
+                    {
+                        _ = Task.Run(() =>
+                        {
+                            try
+                            {
+                                var remaining = credentials.Skip(50).ToList();
+                                var batchSize = 100;
+                                
+                                System.Diagnostics.Debug.WriteLine($"CredentialsPage: Loading remaining {remaining.Count} items in background");
+                                
+                                for (int i = 0; i < remaining.Count; i += batchSize)
+                                {
+                                    var batch = remaining.Skip(i).Take(batchSize).ToList();
+                                    
+                                    DispatcherQueue.TryEnqueue(() =>
+                                    {
+                                        try
+                                        {
+                                            foreach (var cred in batch)
+                                            {
+                                                var vm = new CredentialItemViewModel(cred, null, _vaultService,
+                                                    App.Services.GetRequiredService<IPasswordGeneratorService>());
+                                                ViewModel.Credentials.Add(vm);
+                                                _allCredentials.Add(vm);
+                                            }
+                                        }
+                                        catch (Exception batchEx)
+                                        {
+                                            System.Diagnostics.Debug.WriteLine($"CredentialsPage Batch Error: {batchEx.Message}");
+                                        }
+                                    });
+                                    
+                                    // Small delay between batches to keep UI responsive
+                                    if (i + batchSize < remaining.Count)
+                                        Task.Delay(5).Wait();
+                                }
+                                
+                                System.Diagnostics.Debug.WriteLine("CredentialsPage: All credentials loaded");
+                            }
+                            catch (Exception bgEx)
+                            {
+                                System.Diagnostics.Debug.WriteLine($"CredentialsPage Background Error: {bgEx.Message}");
+                            }
+                        });
+                    }
+                });
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Error loading credentials: {ex.Message}");
-            LoadingRing.IsActive = false;
+            System.Diagnostics.Debug.WriteLine($"CredentialsPage Critical Error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
+            
+            DispatcherQueue.TryEnqueue(() =>
+            {
+                LoadingRing.IsActive = false;
+            });
         }
     }
 

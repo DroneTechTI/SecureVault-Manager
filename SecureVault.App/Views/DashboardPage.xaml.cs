@@ -26,41 +26,64 @@ public sealed partial class DashboardPage : Page
     {
         base.OnNavigatedTo(e);
         
-        // Show total count immediately
         LoadingRing.IsActive = true;
         
         try
         {
+            System.Diagnostics.Debug.WriteLine("DashboardPage: Starting to load data...");
+            
             // Get quick count without analysis
             var credentials = await ViewModel._vaultService.GetAllCredentialsAsync();
             TotalCredentialsText.Text = credentials.Count.ToString();
             ScoreLevelText.Text = "Analisi in corso...";
             ScoreText.Text = "...";
+            StrongPasswordsText.Text = "...";
+            WeakPasswordsText.Text = "...";
+            CompromisedPasswordsText.Text = "...";
+            
+            LoadingRing.IsActive = false;
+            
+            System.Diagnostics.Debug.WriteLine($"DashboardPage: Loaded {credentials.Count} credentials, starting analysis...");
             
             // Start analysis in background without blocking
             _ = Task.Run(async () =>
             {
-                await ViewModel.LoadDataCommand.ExecuteAsync(null);
-                
-                // Update UI on UI thread
-                DispatcherQueue.TryEnqueue(() =>
+                try
                 {
-                    if (ViewModel.SecurityScore != null)
+                    await ViewModel.LoadDataCommand.ExecuteAsync(null);
+                    
+                    System.Diagnostics.Debug.WriteLine("DashboardPage: Analysis complete, updating UI...");
+                    
+                    // Update UI on UI thread
+                    DispatcherQueue.TryEnqueue(() =>
                     {
-                        ScoreText.Text = ViewModel.SecurityScore.OverallScore.ToString();
-                        ScoreLevelText.Text = ViewModel.ScoreLevel;
-                        StrongPasswordsText.Text = ViewModel.StrongPasswords.ToString();
-                        WeakPasswordsText.Text = ViewModel.WeakPasswords.ToString();
-                        CompromisedPasswordsText.Text = ViewModel.CompromisedPasswords.ToString();
-                    }
-                });
+                        if (ViewModel.SecurityScore != null)
+                        {
+                            ScoreText.Text = ViewModel.SecurityScore.OverallScore.ToString();
+                            ScoreLevelText.Text = ViewModel.ScoreLevel;
+                            StrongPasswordsText.Text = ViewModel.StrongPasswords.ToString();
+                            WeakPasswordsText.Text = ViewModel.WeakPasswords.ToString();
+                            CompromisedPasswordsText.Text = ViewModel.CompromisedPasswords.ToString();
+                            
+                            System.Diagnostics.Debug.WriteLine($"DashboardPage: UI updated - Compromised: {ViewModel.CompromisedPasswords}");
+                        }
+                        else
+                        {
+                            System.Diagnostics.Debug.WriteLine("DashboardPage: SecurityScore is null!");
+                        }
+                    });
+                }
+                catch (Exception bgEx)
+                {
+                    System.Diagnostics.Debug.WriteLine($"DashboardPage Background Error: {bgEx.Message}");
+                    System.Diagnostics.Debug.WriteLine($"Stack trace: {bgEx.StackTrace}");
+                }
             });
-            
-            LoadingRing.IsActive = false;
         }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"Dashboard error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"DashboardPage Critical Error: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"Stack trace: {ex.StackTrace}");
             LoadingRing.IsActive = false;
         }
     }
